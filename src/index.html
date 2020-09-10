@@ -2,12 +2,88 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Proyecto1</title>
+  <title>OLC 2 Proyecto1</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/album/">
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <!-- Custom styles for this template -->
+  <link href="https://getbootstrap.com/docs/4.0/examples/album/album.css" rel="stylesheet">
+  <style>
+		.rownr {overflow-y: hidden; background-color: rgb(105,105,105); color: white; text-align: right; vertical-align:top; z-index: 0}
+		.txt {width: 95%; overflow-x: scroll; background: transparent; z-index: 0}
+	</style>
 </head>
 <body>
+  
+<style>
+  :host {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  </style>
   <app-root></app-root>
 </body>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+<script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/holder.min.js"></script>
+<SCRIPT Language="javascript">
+	var cntline;
+	
+	function input_changed(obj_txt)
+	{
+		obj_rownr = obj_txt.parentElement.parentElement.getElementsByTagName('textarea')[0];
+		cntline = count_lines(obj_txt.value);
+		if(cntline == 0) cntline = 1;
+		tmp_arr = obj_rownr.value.split('\n');
+		cntline_old = parseInt(tmp_arr[tmp_arr.length - 1], 10);
+		// if there was a change in line count
+		if(cntline != cntline_old)
+		{
+			obj_rownr.cols = cntline.toString().length; // new width of txt_rownr
+			populate_rownr(obj_rownr, cntline);
+			scroll_changed(obj_txt);
+		}
+	}
+	
+	function scroll_changed(obj_txt)
+	{
+		obj_rownr = obj_txt.parentElement.parentElement.getElementsByTagName('textarea')[0];
+		scrollsync(obj_txt,obj_rownr);
+	}
+	
+	function scrollsync(obj1, obj2)
+	{
+		// scroll text in object id1 the same as object id2
+		obj2.scrollTop = obj1.scrollTop;
+	}
+	
+	function populate_rownr(obj, cntline)
+	{
+		tmpstr = '';
+		for(i = 1; i < cntline; i++)
+		{
+			tmpstr = tmpstr + i.toString() + '\n';
+		}
+		obj.value = tmpstr;
+	}
+	
+	function count_lines(txt)
+	{
+		if(txt == '')
+		{
+			return 1;
+		}
+		return txt.split('\n').length + 1;
+	}
+	
+</SCRIPT>
+
 </html>
