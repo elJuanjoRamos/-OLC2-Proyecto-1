@@ -1,14 +1,14 @@
 import { Instruction } from '../abstract/instruction';
-import { AmbitIdentifier } from '../id/ambit.identifier';
+import { Ambit } from '../id/ambit.identifier';
 
 export class Sentence extends Instruction{
 
-    constructor(code, row, col){
-        super(row, col);
+    constructor(private code : Array<Instruction>, row : number, column : number){
+        super(row, column);
     }
 
-    exec(env) {
-        const newEnv = new AmbitIdentifier(env);
+    public exec(env : Ambit) {
+        const newEnv = new Ambit(env);
         for(const instr of this.code){
             try {
                 const element = instr.exec(newEnv);

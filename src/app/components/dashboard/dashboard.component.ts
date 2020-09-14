@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import * as parser from '../../jison/grammar/gram';
 import * as analisis from '../../jison/grammar/analisis';
 import { OutputController } from '../controller/output.controller';
-import { AmbitIdentifier } from '../../jison/tools/id/ambit.identifier';
+import { Ambit } from '../../jison/tools/id/ambit.identifier';
 import { ErrorController } from '../controller/error.controller';
+import { flushMicrotasks } from '@angular/core/testing';
 
 
 
@@ -31,7 +32,7 @@ export class DashboardComponent implements OnInit {
       OutputController.getinstance().clear();
       console.clear()
       this.strSalida = "";
-      const env = new AmbitIdentifier(null);
+      const env = new Ambit(null);
       //let graficaAST = parser.parse(this.strEntrada);
       let analisisAST = analisis.parse(this.strEntrada);
 
@@ -42,9 +43,9 @@ export class DashboardComponent implements OnInit {
       /**
        * EJECUTAR EJECUCION
        */
-      /*for(const instr of analisisAST){
+      for(const instr of analisisAST){
         try {
-            const actual = instr.execute(env);
+            const actual = instr.exec(env);
             if(actual != null || actual != undefined){
                 //errores.push(new Error_(actual.line, actual.column, 'Semantico', actual.type + ' fuera de un ciclo'));
                 console.error("ERROR SEMANTICO")
@@ -52,7 +53,7 @@ export class DashboardComponent implements OnInit {
         } catch (error) {
             console.error(error)
         }
-      }*/
+      }
     } catch (error) {
       /**
        * INGRESAR ERRORES PARA REPORTE
@@ -61,6 +62,7 @@ export class DashboardComponent implements OnInit {
       //ErrorControlador.getInstancia().agregarError(error.error, "Semántico", error.fila, error.columna);
     }
     this.strSalida = OutputController.getinstance().getOut;
+    console.log(OutputController.getinstance().getOut)
     // IMPRIMIR ERRORES
     ErrorController.getInstance().print();
 

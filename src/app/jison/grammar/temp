@@ -1,0 +1,45 @@
+
+FORIN 
+    : 'RESERV_FOR' '(' FOREXP ')' SENTENCIA
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node)};
+    }
+;
+
+FOROF 
+    : 'RESERV_FOR' '(' FOREXP ')' SENTENCIA
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node)};
+    }
+;
+
+
+FOREXP
+    : 'RESERV_LET' ID TIPOFOR ID
+    {
+       $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
+    }
+    | 'RESERV_VAR' ID TIPOFOR ID
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
+    }
+    | 'RESERV_CONST' ID TIPOFOR ID
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
+    }
+    | DECLARACION_FOR ';' EXPRESION ';' EXPRESION
+    {
+        $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node, $4, $5.node)};
+    }
+;
+
+TIPOFOR
+    : 'RESERV_OF'
+    {
+        $$ = {node: newNode(yy, yystate, $1)};
+    }
+    | 'RESERV_IN'
+    { 
+        $$ = {node: newNode(yy, yystate, $1)};
+    }
+;

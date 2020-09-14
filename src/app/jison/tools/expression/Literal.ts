@@ -1,5 +1,5 @@
 import {Expression} from '../abstract/expression';
-import {  Type } from '../abstract/type';
+import {  Type, Returned } from '../abstract/type';
 
 
 export class Literal extends Expression {
@@ -11,14 +11,12 @@ export class Literal extends Expression {
      * @param col 
      * @param type 
      */
-    constructor(value, row, col, type){
+    constructor(private value : any, row : number, col: number, private type : number){
         super(row, col);
     }
 
-    exec() {
-        //console.error("LITERAL")
-        //console.log(this.value)
-        //console.log(this.type)
+    public exec() : Returned {
+       
         switch (this.type) {
             case 0:
                 return {value : Number(this.value), type : Type.NUMBER};

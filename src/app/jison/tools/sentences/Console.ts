@@ -1,5 +1,9 @@
-import {Instruction} from '../abstract/instruction';
+import { Instruction } from '../abstract/instruction';
 import { OutputController } from '../../../components/controller/output.controller';
+
+import { Expression } from '../abstract/expression';
+import { Ambit } from '../id/ambit.identifier';
+
 
 export class Console extends Instruction {
 
@@ -9,13 +13,15 @@ export class Console extends Instruction {
      * @param row 
      * @param col 
      */
-    constructor(value,row,col){
+    constructor(private value: Expression,row: number,col: number){
         super(row, col);
     }
 
-    exec(ambit) {
+
+    public exec(ambit : Ambit) {
         const value = this.value.exec(ambit);
         OutputController.getinstance().setValue(value.value.toString() + "\n");
+        
     }
 }
 

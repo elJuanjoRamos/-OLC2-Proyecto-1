@@ -6,7 +6,28 @@
   },
   "files": [
     "src/main.ts",
-    "src/polyfills.ts"
+    "src/polyfills.ts",
+    "src/app/jison/tools/abstract/expression.ts",
+    "src/app/jison/tools/abstract/instruction.ts",
+    "src/app/jison/tools/expression/Access.ts",
+    "src/app/jison/tools/expression/Arithmetic.ts",
+    "src/app/jison/tools/expression/Literal.ts",
+    "src/app/jison/tools/expression/Logical.ts",
+    "src/app/jison/tools/expression/Relational.ts",
+    "src/app/jison/tools/sentences/Console.ts",
+    "src/app/jison/tools/sentences/Declaration.ts",
+    "src/app/jison/tools/sentences/DoWhile.ts",
+    "src/app/jison/tools/sentences/Sentence.ts",
+    "src/app/jison/tools/sentences/NoType.ts",
+    "src/app/jison/tools/sentences/While.ts",  
+    "src/app/jison/tools/sentences/If.ts",
+    "src/app/jison/tools/sentences/For.ts",
+    "src/app/jison/tools/sentences/Switch.ts",
+    "src/app/jison/tools/sentences/Case.ts",
+    "src/app/jison/tools/sentences/Default.ts",
+    "src/app/jison/tools/sentences/Break.ts",
+    
+
   ],
   "include": [
     "src/**/*.d.ts"

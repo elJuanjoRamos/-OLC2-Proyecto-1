@@ -1,14 +1,23 @@
 
-export class AmbitIdentifier {
-    
+import { Type } from '../abstract/type';
+import { Identifier } from './Identifier';
 
-   
-    constructor(anterior){
+export class Ambit {
+    private variables: Map<string, Identifier>;
+    public functions: Map<string, Function>;
+
+   /**
+     * CONSTRUCTOR
+     * @param anterior 
+     */
+    constructor(public anterior : Ambit | null){
         this.variables = new Map();
-        this.funciones = new Map();
+        this.functions = new Map();
     }
-    getVariable(id){
-        let env = this;
+
+
+    public getVariable(id: string) : Identifier | undefined | null{
+        let env : Ambit | null = this;
         while(env != null){
             if(env.variables.has(id)){
                 return env.variables.get(id);
@@ -18,8 +27,8 @@ export class AmbitIdentifier {
         return null;
     }
 
-    setVariable(id, valor, type){
-        let env = this;
+    public setVariable(id: string, valor: any, type: Type){
+        let env : Ambit | null = this;
         while(env != null){
             if(env.variables.has(id)){
                 env.variables.set(id, new Identifier(valor, id, type))
@@ -29,8 +38,8 @@ export class AmbitIdentifier {
         }
     }
 
-    save(id, valor, type){
-        let env  = this;
+    public save(id: string, valor: any, type: Type){
+        let env : Ambit | null = this;
         while(env != null){
             if(env.variables.has(id)){
                 env.variables.set(id, new Identifier(valor, id, type));

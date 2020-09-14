@@ -1,29 +1,28 @@
 import { Instruction } from '../abstract/instruction';
+import { Expression } from '../abstract/expression';
 import { ErrorController } from '../../../components/controller/error.controller';
+import { Type } from '../abstract/type';
+import { Ambit } from '../id/ambit.identifier';
+import { flushMicrotasks } from '@angular/core/testing';
 
-/*import { Expression } from '../abstract/expresion.abstract';
-import { Environment } from '../simbolos/enviroment.simbolos';
-*/
+
+
 export class Declaration extends Instruction{
 
-    constructor(id, type, value, fila, columna){
-        super(fila, columna);
-        this.id = id;
-        this.value = value;
-        this.type = type;
+    constructor(private id: string, private type:any, private value: Expression, row: number, column: number){
+        super(row, column);
     }
 
-    exec(ambit) {
+
+    public exec(ambit: Ambit) {
         try {
-            console.error("DECLARACION")
-            console.log(ambit)
             const val = this.value.exec(ambit);
-            console.log(val)
+            
             if(this.type == undefined) {
                 ambit.save(this.id, val.value, val.type);
             } else {
                 if(this.type != val.type) {
-                    throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(this.type), fila: this.fila, columna : this.columna};
+                    throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(this.type), row: this.row, column : this.column};
                 } else {
                     ambit.save(this.id, val.value, val.type);
                 }
@@ -32,12 +31,17 @@ export class Declaration extends Instruction{
             /**
              * INGRESAR ERRORES SEMANTICOS
              */
-            ErrorController.getInstance().add(error.error, "Semántico", error.fila, error.columna);
+            ErrorController.getInstance().add(error.error, "Semántico", error.row, error.column);
         }
         
     }
 
-    getType(type) {
+    public getId(): string{ 
+        return this.id;
+    }
+
+    
+    public getType(type: Type):string {
         switch (type) {
             case 0:
                 return "NUMBER"
