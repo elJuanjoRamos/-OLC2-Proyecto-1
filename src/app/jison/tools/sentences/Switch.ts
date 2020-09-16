@@ -30,24 +30,19 @@ export class Switch extends Instruction{
             
             if (condCase.value == conSwitch.value) { //Evaluo
                 numeroCaso = Number(k);
+
+                var newAmbit = new Ambit(ambit);
+                const element = this.cases[k]; //AGARRO EL CASE COINCIDENTE
+                element.exec(newAmbit); // EJECUTO EL CASE
                 break;
             }
         }
 
-        if (numeroCaso != -1) { //SIGNIFICA QUE ENCONTRO COINCIDENCIAS DENTRO DE LOS CASOS
-            
-            var newAmbit = new Ambit(ambit);
-
-            for (let index = numeroCaso; index < this.cases.length; index++) {
-                const element = this.cases[index];
-                element.exec(newAmbit);
-            }
-
-
-        } else { //SI SIGUE EN -1, SE VA AL DEFAULT
-            this.def.exec(ambit)
+        if (numeroCaso == -1) { //SIGNIFICA QUE ENCONTRO COINCIDENCIAS DENTRO DE LOS CASOS
+            if (this.def != null) {
+                this.def.exec(ambit)                
+            }  
         }
-
         
     }
 

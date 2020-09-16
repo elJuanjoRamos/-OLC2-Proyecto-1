@@ -15,6 +15,7 @@ import { flushMicrotasks } from '@angular/core/testing';
 export class DashboardComponent implements OnInit {
 
   data:any = [];
+  textoSalida = ""
 
   constructor() { }
 
@@ -62,6 +63,7 @@ export class DashboardComponent implements OnInit {
       //ErrorControlador.getInstancia().agregarError(error.error, "Semántico", error.fila, error.columna);
     }
     this.strSalida = OutputController.getinstance().getOut;
+    this.textoSalida = OutputController.getinstance().getOut;
     console.log(OutputController.getinstance().getOut)
     // IMPRIMIR ERRORES
     ErrorController.getInstance().print();

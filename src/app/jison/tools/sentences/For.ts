@@ -38,9 +38,9 @@ export class FOR extends Instruction {
    
 
             if(element != null || element != undefined){
-                if(element.type == 'Break')
+                if(element.type == 'break')
                     break;
-                else if(element.type == 'Continue')
+                else if(element.type == 'continue')
                     this.incrementDecrement.exec(ambit);
                     continue;
             }
@@ -51,12 +51,10 @@ export class FOR extends Instruction {
             ambit.setVariable(this.declaration.getId(), val.value, val.type)
             
 
-
             forCondition = this.condition.exec(ambit);
 
             if(forCondition.type != Type.BOOLEAN){
                 throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
-                break;
             }
         }
     }

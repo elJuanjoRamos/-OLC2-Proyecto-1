@@ -11,9 +11,6 @@ export class Case extends Instruction {
     
     constructor(private condition: Expression,private code: Sentence,row: number,column: number){
         super(row, column);
-
-        console.log(this.condition)
-        console.log(this.code)
     }
 
     public exec(ambit: Ambit){

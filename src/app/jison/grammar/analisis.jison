@@ -230,22 +230,22 @@ DECLARACION_VAR
     {
         $$ = new Declaration($2, null, null, @1.first_line, @1.first_column);
     }
-    | 'RESERV_VAR' ID ':' TIPO ARREGLO '=' EXPRESION ';'
+    | 'RESERV_VAR' ID ':' TIPO ARRAY '=' '[' ARRAY_CONTENT  ']' ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5.node, $6, $7.node, $8)};
     }
     |
-    'RESERV_VAR' ID ':' TIPO ARREGLO ';'
+    'RESERV_VAR' ID ':' TIPO ARRAY ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5.node, $6)};
     }
     |
-    'RESERV_VAR' ID ARREGLO '=' EXPRESION ';'
+    'RESERV_VAR' ID ARRAY '=' EXPRESION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6)};
     }
     |
-    'RESERV_VAR' ID ARREGLO ';'
+    'RESERV_VAR' ID ARRAY ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
     }
@@ -254,43 +254,69 @@ DECLARACION_VAR
 DECLARACION_LET
     : 'RESERV_LET' ID ':' TIPO '=' EXPRESION ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5, $6.node, $7)};
+        $$ = new Declaration($2, $4, $6, @1.first_line, @1.first_column);
     }
     |
     'RESERV_LET' ID ':' TIPO ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5)};
+        $$ = new Declaration($2, $4, null, @1.first_line, @1.first_column);
     }
     |
     'RESERV_LET' ID '=' EXPRESION ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5)};
+        $$ = new Declaration($2, null, $4, @1.first_line, @1.first_column);
     }
     |
     'RESERV_LET' ID ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3)};
+        $$ = new Declaration($2, null, null, @1.first_line, @1.first_column);
     }
-    | 'RESERV_LET' ID ':' TIPO ARREGLO '=' EXPRESION ';'
+    | 'RESERV_LET' ID ':' TIPO ARRAY '='  '['  ARRAY_CONTENT ']' ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5.node, $6, $7.node, $8)};
     }
     |
-    'RESERV_LET' ID ':' TIPO ARREGLO ';'
+    'RESERV_LET' ID ':' TIPO ARRAY ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5.node, $6)};
     }
     |
-    'RESERV_LET' ID ARREGLO '=' EXPRESION ';'
+    'RESERV_LET' ID ARRAY '=' EXPRESION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6)};
     }
     |
-    'RESERV_LET' ID ARREGLO ';'
+    'RESERV_LET' ID ARRAY ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
     }
 ;
+
+ARRAY
+    : '[' SIZE_OF_ARRAY ']'
+    {
+        $$ = $2;
+    }
+    /*| '[' ']' '[' ']'
+    { 
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4)};
+    }*/
+;
+SIZE_OF_ARRAY
+    : NUMERO    { $$ = $1 }
+    | /*epsilon*/ { $$ = null }
+    ;
+
+ARRAY_CONTENT 
+    : ARRAY_CONTENT ',' EXPRESION
+    | EXPRESION
+    ;
+
+
+
+
+
+
 
 DECLARACION_CONST
     : 'RESERV_CONST' ID ':' TIPO '=' EXPRESION ';'
@@ -310,7 +336,7 @@ DECLARATION_NOTYPE
         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6)};
     }
     |
-    ID ':' TIPO ARREGLO '=' EXPRESION ';'
+    ID ':' TIPO ARRAY '=' EXPRESION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5, $6.node, $7)};
     }
@@ -336,16 +362,11 @@ TIPO
     }
 ;
 
-ARREGLO
-    : '[' ']'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2)};
-    }
-    | '[' ']' '[' ']'
-    { 
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4)};
-    }
-;
+
+
+
+
+
 
 EXPRESION     
     : EXPRESION '+' EXPRESION
@@ -506,7 +527,7 @@ RETURN
 ;
 
 IF 
-    : 'RESERV_IF' '(' EXPRESION ')' SENTENCIA ELSEIF
+    : 'RESERV_IF' '(' EXPRESION ')' SENTENCIA ELIF
     {
         $$ = new IF($3, $5, $6, @1.first_line, @1.first_column);
     }
@@ -525,7 +546,7 @@ SENTENCIA
     }
 ;
 
-ELSEIF 
+ELIF 
     : 'RESERV_ELSE' SENTENCIA
     {
         $$ = $2;
