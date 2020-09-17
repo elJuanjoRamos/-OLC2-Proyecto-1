@@ -15,8 +15,7 @@ import { flushMicrotasks } from '@angular/core/testing';
 export class DashboardComponent implements OnInit {
 
   data:any = [];
-  textoSalida = ""
-
+  
   constructor() { }
 
   ngOnInit(): void {
@@ -24,7 +23,7 @@ export class DashboardComponent implements OnInit {
 
   strEntrada:string;
   strSalida:string;
-
+  textoSalida: string;
   analize() {
     try {
       /**
@@ -32,7 +31,6 @@ export class DashboardComponent implements OnInit {
        */
       OutputController.getinstance().clear();
       console.clear()
-      this.strSalida = "";
       const env = new Ambit(null);
       //let graficaAST = parser.parse(this.strEntrada);
       let analisisAST = analisis.parse(this.strEntrada);
@@ -41,8 +39,21 @@ export class DashboardComponent implements OnInit {
           //graficar.generateTree([graficaAST.node]);
       }, 1000);
 
+     /* var arreglo1: string[] = []
 
-      var arreglo: Array = new Array()
+      var arreglo1: string[]; 
+
+      var arreglo: string[] = new Array(4);
+
+      
+      var arreglo1: Array<string> = []
+      var arreglo1: Array<string>;
+      var arreglo1: Array<string> = new Array(4);*/
+
+
+
+
+
 
       /**
        * EJECUTAR EJECUCION

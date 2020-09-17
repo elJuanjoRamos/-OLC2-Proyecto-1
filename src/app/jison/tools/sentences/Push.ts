@@ -14,7 +14,7 @@ export class Pushs extends Instruction {
 
     public exec(ambit: Ambit) {
 
-        var variable = ambit.getVariable(this.id) // obtengo la variable
+        var variable = ambit.getVariable(this.id) // obtengo la variable array al que le voy a insertar
 
         if (variable != null) { //VERIFICO QUE NO SEA NULA
             
@@ -40,6 +40,7 @@ export class Pushs extends Instruction {
                         arregloElementos = variable.value
                     } 
 
+                    
 
                     arregloElementos.push(this.value)
 

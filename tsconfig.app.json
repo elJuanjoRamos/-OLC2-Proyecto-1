@@ -29,6 +29,7 @@
     "src/app/jison/tools/sentences/Push.ts",
     "src/app/jison/tools/sentences/Pop.ts",
     "src/app/jison/tools/declaration_type/Arrays.ts",
+    "src/app/jison/tools/declaration_type/ArrayObject.ts",
     
 
   ],

@@ -19,6 +19,7 @@
     const { Default } = require('../tools/sentences/Default');
     const { Break } = require('../tools/sentences/Break');
     const { Arrays } = require('../tools/declaration_type/Arrays');
+    const { ArrayObject } = require('../tools/declaration_type/ArrayObject');
     const { Pushs } = require('../tools/sentences/Push');
     const { Pop } = require('../tools/sentences/Pop');
 
@@ -103,6 +104,7 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 "pop"                   return 'RESERV_POP'
 "new"                   return 'RESERV_NEW'
 "Array"                 return 'RESERV_ARRAY'
+"any"                   return 'RESERV_ANY'
 
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'ID';
 <<EOF>>               return 'EOF';
@@ -247,13 +249,45 @@ LET_DECLARATION
     }
 
     ////// ESTO ES PARA ARREGLOS
+    
+    // var array: string[] = []
     | 'RESERV_LET' ID ':' TIPO ARRAY '=' '['  NULLORDATA ']' ';'
     {
         $$ = new Arrays($2, $4, $8,  @1.first_line, @1.first_column);
     }
+    // var array: string[];
+    | 'RESERV_LET' ID ':' TIPO ARRAY';'
+    {
+        $$ = new Arrays($2, $4, null,  @1.first_line, @1.first_column);
+    }
+    // var array: string[] = new Array(); 
     | 'RESERV_LET' ID ':' TIPO ARRAY '=' 'RESERV_NEW'  'RESERV_ARRAY' '(' NULLORDATA ')'  ';'
     {
-        $$ = new Arrays($2, $4, $8,  @1.first_line, @1.first_column);
+        $$ = new ArrayObject($2, $4, $10,  @1.first_line, @1.first_column);
+    }
+    // var arreglo1: Array<string> = []
+    | 'RESERV_LET' ID ':' 'RESERV_ARRAY' '<' TIPO '>' '=' '['  NULLORDATA ']' ';'
+    {
+        $$ = new Arrays($2, $6, $9,  @1.first_line, @1.first_column);
+    }
+    //var arreglo1: Array<string>;
+    | 'RESERV_LET' ID ':' 'RESERV_ARRAY' '<' TIPO '>' ';'
+    {
+        $$ = new Arrays($2, $6, null,  @1.first_line, @1.first_column);
+    }
+    // var arreglo1: Array<string> = new Array(4);
+    | 'RESERV_LET' ID ':' 'RESERV_ARRAY' '<' TIPO '>' '=' 'RESERV_NEW'  'RESERV_ARRAY' '(' NULLORDATA ')'  ';'
+    {
+        $$ = new ArrayObject($2, $6, $12,  @1.first_line, @1.first_column);
+    }
+    // var array = []
+    | 'RESERV_LET' ID '=' '['  NULLORDATA ']' ';'
+    {
+        $$ = new Arrays($2, 7, $5,  @1.first_line, @1.first_column);
+    }
+    | 'RESERV_LET' ID  '=' 'RESERV_NEW'  'RESERV_ARRAY' '(' NULLORDATA ')'  ';'
+    {
+        $$ = new ArrayObject($2, 7, $7,  @1.first_line, @1.first_column);
     }
 ;
 
@@ -345,6 +379,11 @@ TIPO
     { 
         $$ = 2;
     }
+    | 'RESERV_ANY'
+    { 
+        $$ = 7;
+    }
+
 ;
 
 

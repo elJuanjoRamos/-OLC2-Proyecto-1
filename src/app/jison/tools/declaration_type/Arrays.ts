@@ -7,7 +7,7 @@ import { Ambit } from '../id/ambit.identifier';
 
 
 export class Arrays extends Instruction {
-    public lenght: number = 0;
+    public lenght: number = -1;
     constructor(private id: string, private type: Type, private values: Array<Expression>, row: number, column: number) {
         super(row, column);
     }
@@ -32,9 +32,9 @@ export class Arrays extends Instruction {
                 const element = this.values[index];
                 var temp = element.exec(ambit) //OBTENGO EL ELEMENTO
 
-
-                if (this.getType(this.type) != this.getType(temp.type)) { //VERIFICO QUE LOS TIPOS SEAN IGUALES
-
+                //VERIFICO QUE LOS TIPOS SEAN IGUALES O QUE EL TIPO SEA ANY
+                if ((this.getType(this.type) != this.getType(temp.type)) && this.getType(this.type) != 'ARRAYANY') { 
+                    
                     //SI NO COINCIDEN MARCA ERROR Y SE DETIENE
                     ErrorController.getInstance().add("No se puede asignar el tipo " + this.getType(temp.type)
                         + " al tipo " + this.getType(this.type), "Semántico", this.column, this.row);
@@ -54,7 +54,7 @@ export class Arrays extends Instruction {
 
 
         } else {
-            this.lenght = 0;
+            this.lenght = -1;
         }
     }
 
@@ -76,7 +76,7 @@ export class Arrays extends Instruction {
                 return 4
             case 2:
                 return 6
-            case 3:
+            case 7:
                 return 7
         }
     }

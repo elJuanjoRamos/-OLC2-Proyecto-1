@@ -39,13 +39,13 @@ export class Pop extends Instruction {
                                 arregloTemporal.push(element)
                             }    
 
-                            ambit.save(variable.id, arregloTemporal, variable.type)
+                            ambit.setVariable(variable.id, arregloTemporal, variable.type)
 
                             return arregloElementos.pop();
                         } 
 
                         if (arregloElementos.length == 1) {
-                            ambit.save(variable.id, null, variable.type)
+                            ambit.setVariable(variable.id, arregloTemporal, variable.type)
 
                             return arregloElementos.pop();    
                         }
@@ -54,6 +54,7 @@ export class Pop extends Instruction {
                     
                     } else {
                         ErrorController.getInstance().add("El arreglo " + this.id + " no contiene elementos", "Semántico", this.column, this.row);
+                        return {value: 'undefined'};
                     }  
                     
 
@@ -61,6 +62,7 @@ export class Pop extends Instruction {
 
                 } else {
                     ErrorController.getInstance().add("El arreglo " + this.id + " no contiene elementos", "Semántico", this.column, this.row);
+                    return {value: 'undefined'};
                 }
                 
 
@@ -82,10 +84,11 @@ export class Pop extends Instruction {
                 
             } else {
                 ErrorController.getInstance().add("La variable " + this.id + " no es un Array", "Semántico", this.column, this.row);
-
+                return {value: 'undefined'};
             }
         } else {
             ErrorController.getInstance().add("La variable " + this.id + " no está declarada", "Semántico", this.column, this.row);
+            return {value: 'undefined'};
         }
 
     }
