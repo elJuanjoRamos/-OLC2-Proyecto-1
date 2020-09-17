@@ -3,7 +3,10 @@ export enum Type {
     STRING=1,
     BOOLEAN= 2,
     NULL= 3,
-    ARRAY= 4
+    ARRAYSTRING= 4,
+    ARRAYNUMBER= 5,
+    ARRAYBOOLEAN= 6,
+    ARRAYANY= 7,
 }
 
 export enum OpRelational{

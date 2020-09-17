@@ -18,6 +18,9 @@
     const { Case } = require('../tools/sentences/Case');
     const { Default } = require('../tools/sentences/Default');
     const { Break } = require('../tools/sentences/Break');
+    const { Arrays } = require('../tools/declaration_type/Arrays');
+    const { Pushs } = require('../tools/sentences/Push');
+    const { Pop } = require('../tools/sentences/Pop');
 
 %}
 %lex
@@ -96,6 +99,10 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 "false"                 return 'RESERV_FALSE'
 "of"                    return 'RESERV_OF'
 "in"                    return 'RESERV_IN'
+"push"                  return 'RESERV_PUSH'
+"pop"                   return 'RESERV_POP'
+"new"                   return 'RESERV_NEW'
+"Array"                 return 'RESERV_ARRAY'
 
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'ID';
 <<EOF>>               return 'EOF';
@@ -134,17 +141,13 @@ INSTRUCCIONES
 ;
 
 INSTRUCCION
-    : DECLARACION_VAR
+    :
+    LET_DECLARATION
     {
         $$ = $1
     }
     |
-    DECLARACION_LET
-    {
-        $$ = {node: newNode(yy, yystate, $1.node)};
-    }
-    |
-    DECLARACION_CONST
+    CONST_DECLARATION
     {
         $$ = {node: newNode(yy, yystate, $1.node)};
     }
@@ -208,50 +211,21 @@ INSTRUCCION
     {
         $$ = $1;
     }
+    |
+    PUSH
+    {
+        $$ = $1;
+    }
+    |
+    POP
+    {
+        $$ = $1;
+    }
+    
 ;
 
-DECLARACION_VAR 
-    : 'RESERV_VAR' ID ':' TIPO '=' EXPRESION ';'
-    {
-        $$ = new Declaration($2, $4, $6, @1.first_line, @1.first_column);
-    }
-    |
-    'RESERV_VAR' ID ':' TIPO ';'
-    {
-        $$ = new Declaration($2, $4, null, @1.first_line, @1.first_column);
-    }
-    |
-    'RESERV_VAR' ID '=' EXPRESION ';'
-    {
-        $$ = new Declaration($2, null, $4, @1.first_line, @1.first_column);
-    }
-    |
-    'RESERV_VAR' ID ';'
-    {
-        $$ = new Declaration($2, null, null, @1.first_line, @1.first_column);
-    }
-    | 'RESERV_VAR' ID ':' TIPO ARRAY '=' '[' ARRAY_CONTENT  ']' ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5.node, $6, $7.node, $8)};
-    }
-    |
-    'RESERV_VAR' ID ':' TIPO ARRAY ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5.node, $6)};
-    }
-    |
-    'RESERV_VAR' ID ARRAY '=' EXPRESION ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6)};
-    }
-    |
-    'RESERV_VAR' ID ARRAY ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
-    }
-;
 
-DECLARACION_LET
+LET_DECLARATION
     : 'RESERV_LET' ID ':' TIPO '=' EXPRESION ';'
     {
         $$ = new Declaration($2, $4, $6, @1.first_line, @1.first_column);
@@ -271,54 +245,65 @@ DECLARACION_LET
     {
         $$ = new Declaration($2, null, null, @1.first_line, @1.first_column);
     }
-    | 'RESERV_LET' ID ':' TIPO ARRAY '='  '['  ARRAY_CONTENT ']' ';'
+
+    ////// ESTO ES PARA ARREGLOS
+    | 'RESERV_LET' ID ':' TIPO ARRAY '=' '['  NULLORDATA ']' ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5.node, $6, $7.node, $8)};
+        $$ = new Arrays($2, $4, $8,  @1.first_line, @1.first_column);
     }
-    |
-    'RESERV_LET' ID ':' TIPO ARRAY ';'
+    | 'RESERV_LET' ID ':' TIPO ARRAY '=' 'RESERV_NEW'  'RESERV_ARRAY' '(' NULLORDATA ')'  ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5.node, $6)};
-    }
-    |
-    'RESERV_LET' ID ARRAY '=' EXPRESION ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6)};
-    }
-    |
-    'RESERV_LET' ID ARRAY ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
+        $$ = new Arrays($2, $4, $8,  @1.first_line, @1.first_column);
     }
 ;
 
+
+//////////// ARRAY ///////////
 ARRAY
-    : '[' SIZE_OF_ARRAY ']'
-    {
-        $$ = $2;
-    }
+    : '[' ']'
+    
     /*| '[' ']' '[' ']'
     { 
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4)};
     }*/
 ;
-SIZE_OF_ARRAY
-    : NUMERO    { $$ = $1 }
+
+NULLORDATA
+    :ARRAY_CONTENT { $$ = $1 }
     | /*epsilon*/ { $$ = null }
     ;
-
 ARRAY_CONTENT 
-    : ARRAY_CONTENT ',' EXPRESION
-    | EXPRESION
+    : ARRAY_CONTENT ',' EXPRESION 
+    {
+        $1.push($3);
+        $$ = $1
+    }
+    | EXPRESION 
+    {
+        $$ = [$1]
+    }
     ;
 
 
 
 
 
+PUSH
+    :   ID '.' 'RESERV_PUSH' '(' EXPRESION ')' ';'
+    {
+        $$ = new Pushs($1, $5, @1.first_line, @1.first_column)
+    }
+    ;
 
+POP 
+    :   ID '.' 'RESERV_POP' '(' ')'
+    {
+        $$ = new Pop($1, @1.first_line, @1.first_column)
+    }
+    ;
+//////////////// END ARRAY   ///////////////////////
 
-DECLARACION_CONST
+CONST_DECLARATION
     : 'RESERV_CONST' ID ':' TIPO '=' EXPRESION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5, $6.node, $7)};
@@ -464,6 +449,11 @@ EXPRESION
         $$ = new Arithmetic($1, $1, OpArithmetic.DECREME, @1.first_line,@1.first_column);
     }
     |
+    POP
+    {
+        $$ = $1
+    }
+    |
     IDENTIFICADOR
     {
         $$ = $1
@@ -495,11 +485,28 @@ IDENTIFICADOR
     { 
         $$ = new Literal($1, @1.first_line, @1.first_column, 2)
     }
+    | ID '[' IDEN_ARRAY ']' //esto es para arreglos
+    { 
+        $$ = new Access($1 + '[' + $3 + ']', @1.first_line, @1.first_column)
+    }
     | ID
     { 
         $$ = new Access($1, @1.first_line, @1.first_column)
     }
+    
 ;
+
+IDEN_ARRAY 
+    :
+    NUMERO
+    { 
+        $$ = $1
+    }
+    | ID
+    { 
+        $$ = $1
+    }
+    ;
 
 BREAK 
     : 'RESERV_BREAK'  ';'

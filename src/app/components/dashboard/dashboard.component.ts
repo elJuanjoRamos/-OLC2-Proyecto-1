@@ -41,6 +41,9 @@ export class DashboardComponent implements OnInit {
           //graficar.generateTree([graficaAST.node]);
       }, 1000);
 
+
+      var arreglo: Array = new Array()
+
       /**
        * EJECUTAR EJECUCION
        */

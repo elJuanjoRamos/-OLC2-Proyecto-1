@@ -27,7 +27,7 @@ export class DoWhile extends Instruction{
         do {
             const element = this.code.exec(ambit);
             if(element != null || element != undefined){
-                if(element.type == 'Break')
+                if(element.type == 'break')
                     break;
                 else if(element.type == 'Continue')
                     continue;

@@ -21,7 +21,6 @@ export class Case extends Instruction {
             if(element.type == 'break')
                 return;
         }
-   
     }
     public getCond(ambit : Ambit): any{
         const condition = this.condition.exec(ambit);
