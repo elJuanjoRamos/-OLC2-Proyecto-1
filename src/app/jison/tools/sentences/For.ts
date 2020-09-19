@@ -22,40 +22,48 @@ export class FOR extends Instruction {
 
     public exec(ambit : Ambit){
        
+
+        //eliminar new Ambit
+       var newAmbit = new Ambit(ambit)
        
-        this.declaration.exec(ambit)
+        this.declaration.exec(newAmbit)
         
-        var forCondition = this.condition.exec(ambit);
+        var forCondition = this.condition.exec(newAmbit);
 
         if(forCondition.type != Type.BOOLEAN){
             throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
         }
 
-        while(forCondition.value == true){
+       // let temporal: any = this.sentencias
+        //if (temporal.length > 0) {
+            while(forCondition.value == true){
 
            
-            const element = this.sentencias.exec(ambit);
-   
-
-            if(element != null || element != undefined){
-                if(element.type == 'break')
-                    break;
-                else if(element.type == 'continue')
-                    this.incrementDecrement.exec(ambit);
-                    continue;
+                const element = this.sentencias.exec(newAmbit);
+       
+    
+                if(element != null || element != undefined){
+                    if(element.type == 'break')
+                        break;
+                    else if(element.type == 'continue')
+                        this.incrementDecrement.exec(newAmbit);
+                        continue;
+                }
+    
+                const val = this.incrementDecrement.exec(newAmbit);
+               
+                
+                newAmbit.setVariable(this.declaration.getId(), val.value, val.type)
+                
+    
+                forCondition = this.condition.exec(newAmbit);
+    
+                if(forCondition.type != Type.BOOLEAN){
+                    throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
+                }
             }
+        //}
 
-            const val = this.incrementDecrement.exec(ambit);
-           
-            
-            ambit.setVariable(this.declaration.getId(), val.value, val.type)
-            
-
-            forCondition = this.condition.exec(ambit);
-
-            if(forCondition.type != Type.BOOLEAN){
-                throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
-            }
-        }
+        
     }
 }

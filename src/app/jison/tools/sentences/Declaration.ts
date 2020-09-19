@@ -20,7 +20,7 @@ export class Declaration extends Instruction{
             if(this.type == undefined) {
                 ambit.save(this.id, val.value, val.type);
             } else {
-                if(this.type != val.type) {
+                if((this.type != val.type) && this.type != 7) {
                     throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(this.type), row: this.row, column : this.column};
                 } else {
                     ambit.save(this.id, val.value, val.type);
@@ -48,7 +48,9 @@ export class Declaration extends Instruction{
                 return "STRING"
             case 2:
                 return "BOOLEAN"
-        }
+                case 7:
+                    return "ANY"
+            }
         return ""
     }
 

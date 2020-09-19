@@ -22,6 +22,8 @@
     "src/app/jison/tools/sentences/While.ts",  
     "src/app/jison/tools/sentences/If.ts",
     "src/app/jison/tools/sentences/For.ts",
+    "src/app/jison/tools/sentences/ForIn.ts",
+    "src/app/jison/tools/sentences/ForOf.ts",
     "src/app/jison/tools/sentences/Switch.ts",
     "src/app/jison/tools/sentences/Case.ts",
     "src/app/jison/tools/sentences/Default.ts",

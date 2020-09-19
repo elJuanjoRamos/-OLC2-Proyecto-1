@@ -13,6 +13,8 @@
     const { DoWhile } = require('../tools/sentences/DoWhile');
     const { IF } = require('../tools/sentences/If');
     const { FOR } = require('../tools/sentences/For');
+    const { FORIN } = require('../tools/sentences/ForIn');
+    const { FOROF } = require('../tools/sentences/ForOf');
     const { Sentence } = require('../tools/sentences/Sentence');
     const { Switch } = require('../tools/sentences/Switch');
     const { Case } = require('../tools/sentences/Case');
@@ -223,7 +225,6 @@ INSTRUCCION
     {
         $$ = $1;
     }
-    
 ;
 
 
@@ -290,6 +291,7 @@ LET_DECLARATION
         $$ = new ArrayObject($2, 7, $7,  @1.first_line, @1.first_column);
     }
 ;
+
 
 
 //////////// ARRAY ///////////
@@ -588,7 +590,7 @@ SENTENCIA
     }
     | '{' '}'
     {
-        $$ = $1;
+        $$ = null;
     }
 ;
 
@@ -670,6 +672,28 @@ FOR
     {
         $$ = new FOR($3, $5, $7, $9, @1.first_line, @1.first_column);
     }
+    | 'RESERV_FOR''(' 'RESERV_VAR' ID 'RESERV_IN' ID ')' SENTENCIA
+    {
+        var declar = new Declaration($4, 7, new Literal('0', @1.first_line, @1.first_column, 0), @1.first_line, @1.first_column);
+        $$ = new FORIN(declar, $6, $8, @1.first_line, @1.first_column);
+    }
+    | 'RESERV_FOR''(' 'RESERV_LET' ID 'RESERV_IN' ID ')' SENTENCIA
+    {
+        var declar = new Declaration($4, 7, new Literal('0', @1.first_line, @1.first_column, 0), @1.first_line, @1.first_column);
+        $$ = new FORIN(declar, $6, $8, @1.first_line, @1.first_column);
+    }
+
+
+    | 'RESERV_FOR''(' 'RESERV_VAR' ID 'RESERV_OF' ID ')' SENTENCIA
+    {
+        var declar = new Declaration($4, 7, new Literal('0', @1.first_line, @1.first_column, 0), @1.first_line, @1.first_column);
+        $$ = new FOROF(declar, $6, $8, @1.first_line, @1.first_column);
+    }
+    | 'RESERV_FOR''(' 'RESERV_LET' ID 'RESERV_OF' ID ')' SENTENCIA
+    {
+        var declar = new Declaration($4, 7, new Literal('0', @1.first_line, @1.first_column, 0), @1.first_line, @1.first_column);
+        $$ = new FOROF(declar, $6, $8, @1.first_line, @1.first_column);
+    }
 ;
 
 DECLA_FOR
@@ -686,7 +710,7 @@ DECLARACION_FOR
     |
     'RESERV_VAR' ID '=' EXPRESION
     {
-        $$ = new Declaration($2, 0, $6, @1.first_line, @1.first_column);
+        $$ = new Declaration($2, 0, $4, @1.first_line, @1.first_column);
     }
     | 'RESERV_LET' ID ':' TIPO '=' EXPRESION
     {

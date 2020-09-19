@@ -7,6 +7,7 @@ export enum Type {
     ARRAYNUMBER= 5,
     ARRAYBOOLEAN= 6,
     ARRAYANY= 7,
+    ANY = 8,
 }
 
 export enum OpRelational{
