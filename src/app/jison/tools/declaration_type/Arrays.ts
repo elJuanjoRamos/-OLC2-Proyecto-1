@@ -16,7 +16,6 @@ export class Arrays extends Instruction {
     public exec(ambit: Ambit) {
 
 
-
        ambit.save(this.id, this.values, this.getArrayType(this.type)); //GUARDO EL ARREGLO
 
 
@@ -29,28 +28,33 @@ export class Arrays extends Instruction {
             var flag = true;
 
             for (let index = 0; index < this.values.length; index++) { //ITERO SOBRE LOS ELEMENTOS
-                const element = this.values[index];
-                var temp = element.exec(ambit) //OBTENGO EL ELEMENTO
+                
+
+                var t:any[] = this.values[index]
+                console.log(t.length);
+                //const element = this.values[index];
+
+                //var temp = element.exec(ambit) //OBTENGO EL ELEMENTO
 
                 //VERIFICO QUE LOS TIPOS SEAN IGUALES O QUE EL TIPO SEA ANY
-                if ((this.getType(this.type) != this.getType(temp.type)) && this.getType(this.type) != 'ARRAYANY') { 
+                /*if ((this.getType(this.type) != this.getType(temp.type)) && this.getType(this.type) != 'ARRAYANY') { 
                     
                     //SI NO COINCIDEN MARCA ERROR Y SE DETIENE
                     ErrorController.getInstance().add("No se puede asignar el tipo " + this.getType(temp.type)
                         + " al tipo " + this.getType(this.type), "Semántico", this.column, this.row);
                     flag = false
                     break;
-                }
+                }*/
             }
 
-            if (flag) {
+           /* if (flag) {
                 for (let index = 0; index < this.values.length; index++) { //ITERO SOBRE LOS ELEMENTOS
                     const element = this.values[index];
                     var temp = element.exec(ambit) //OBTENGO EL ELEMENTO
                     ambit.save(this.id + '[' + index + ']', temp.value, temp.type); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
 
                 }
-            }
+            }*/
 
 
         } else {

@@ -2,6 +2,7 @@ import { Instruction } from '../abstract/instruction';
 import {Type} from '../abstract/type'
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
+import { ErrorController } from '../../../components/controller/error.controller';
 
 
 export class IF extends Instruction {
@@ -13,16 +14,21 @@ export class IF extends Instruction {
 
     public exec(ambit : Ambit) {
         
-        const condition = this.condition.exec(ambit);
+
+
+
+        var newAmbit = new Ambit(ambit);
+
+        const condition = this.condition.exec(newAmbit);
         if(condition.type != Type.BOOLEAN){
-            throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
+            ErrorController.getInstance().add("La condicion no es booleana", "Semantico" ,this.row, this.column);
         }
 
         if(condition.value == true){
-            return this.code.exec(ambit);
+            return this.code.exec(newAmbit);
         }
         else{
-            return this.elseDeclaracion?.exec(ambit);
+            return this.elseDeclaracion?.exec(newAmbit);
         }
     }
 }

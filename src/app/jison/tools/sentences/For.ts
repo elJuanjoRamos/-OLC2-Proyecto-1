@@ -23,7 +23,6 @@ export class FOR extends Instruction {
     public exec(ambit : Ambit){
        
 
-        //eliminar new Ambit
        var newAmbit = new Ambit(ambit)
        
         this.declaration.exec(newAmbit)

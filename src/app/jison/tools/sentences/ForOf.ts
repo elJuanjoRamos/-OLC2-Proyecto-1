@@ -1,3 +1,4 @@
+import { ErrorController } from 'src/app/components/controller/error.controller';
 import { Instruction } from '../abstract/instruction';
 import { Ambit } from '../id/ambit.identifier';
 import { Declaration } from './Declaration';
@@ -57,6 +58,8 @@ export class FOROF extends Instruction {
 
                 }
             }
+        } else {
+            ErrorController.getInstance().add("No existe la variable "+ this.array , "Semántico", this.column, this.row);
         }
 
 

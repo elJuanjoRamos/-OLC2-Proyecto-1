@@ -229,7 +229,7 @@ INSTRUCCION
 
 
 LET_DECLARATION
-    : 'RESERV_LET' ID ':' TIPO '=' EXPRESION ';'
+    : 'RESERV_LET' ID ':' TIPO '=' EXPRESSION ';'
     {
         $$ = new Declaration($2, $4, $6, @1.first_line, @1.first_column);
     }
@@ -239,7 +239,7 @@ LET_DECLARATION
         $$ = new Declaration($2, $4, null, @1.first_line, @1.first_column);
     }
     |
-    'RESERV_LET' ID '=' EXPRESION ';'
+    'RESERV_LET' ID '=' EXPRESSION ';'
     {
         $$ = new Declaration($2, null, $4, @1.first_line, @1.first_column);
     }
@@ -309,23 +309,36 @@ NULLORDATA
     | /*epsilon*/ { $$ = null }
     ;
 ARRAY_CONTENT 
-    : ARRAY_CONTENT ',' EXPRESION 
+    : ARRAY_CONTENT ',' MORE_ARRAY 
     {
         $1.push($3);
         $$ = $1
     }
-    | EXPRESION 
+    |  MORE_ARRAY
     {
         $$ = [$1]
+    
+    }
+    ;
+
+
+MORE_ARRAY
+    : EXPRESSION
+    {
+        $$= $1
+    }
+    | '[' ARRAY_CONTENT ']' 
+    {
+        $$ = $2
+    
     }
     ;
 
 
 
 
-
 PUSH
-    :   ID '.' 'RESERV_PUSH' '(' EXPRESION ')' ';'
+    :   ID '.' 'RESERV_PUSH' '(' EXPRESSION ')' ';'
     {
         $$ = new Pushs($1, $5, @1.first_line, @1.first_column)
     }
@@ -340,29 +353,29 @@ POP
 //////////////// END ARRAY   ///////////////////////
 
 CONST_DECLARATION
-    : 'RESERV_CONST' ID ':' TIPO '=' EXPRESION ';'
+    : 'RESERV_CONST' ID ':' TIPO '=' EXPRESSION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5, $6.node, $7)};
     }
     |
-    'RESERV_CONST' ID '=' EXPRESION ';'
+    'RESERV_CONST' ID '=' EXPRESSION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5)};
     }
 ;
 
 DECLARATION_NOTYPE
-    : ID ':' TIPO '=' EXPRESION ';'
+    : ID ':' TIPO '=' EXPRESSION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6)};
     }
     |
-    ID ':' TIPO ARRAY '=' EXPRESION ';'
+    ID ':' TIPO ARRAY '=' EXPRESSION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5, $6.node, $7)};
     }
     |
-    ID '=' EXPRESION ';'
+    ID '=' EXPRESSION ';'
     {
         $$ = new NoType($1, $3, @1.first_line, @1.first_column);
     }
@@ -394,98 +407,98 @@ TIPO
 
 
 
-EXPRESION     
-    : EXPRESION '+' EXPRESION
+EXPRESSION     
+    : EXPRESSION '+' EXPRESSION
     {
         $$ = new Arithmetic($1, $3, OpArithmetic.SUM, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '-' EXPRESION
+    EXPRESSION '-' EXPRESSION
     {
         $$ = new Arithmetic($1, $3, OpArithmetic.SUBTRACTION, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '*' EXPRESION
+    EXPRESSION '*' EXPRESSION
     {
         $$ = new Arithmetic($1, $3, OpArithmetic.MULTIPLICATION, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '/' EXPRESION
+    EXPRESSION '/' EXPRESSION
     {
         $$ = new Arithmetic($1, $3, OpArithmetic.DIVISION, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '%' EXPRESION
+    EXPRESSION '%' EXPRESSION
     {
         $$ = new Arithmetic($1, $3, OpArithmetic.MODULE, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '^' EXPRESION
+    EXPRESSION '^' EXPRESSION
     {
         $$ = new Arithmetic($1, $3, OpArithmetic.EXPONENT, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '*' '*' EXPRESION
+    EXPRESSION '*' '*' EXPRESSION
     {
         $$ = new Arithmetic($1, $4, OpArithmetic.EXPONENT, @1.first_line,@1.first_column);
     } 
     |
-    '-' EXPRESION
+    '-' EXPRESSION
     {
         $$ = new Arithmetic($2, $2, OpArithmetic.NEGATIVE, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '<' EXPRESION
+    EXPRESSION '<' EXPRESSION
     {
         $$ = new Relational($1, $3, OpRelational.LESS, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '>' EXPRESION
+    EXPRESSION '>' EXPRESSION
     {
         $$ = new Relational($1, $3, OpRelational.HIGHER, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '<' '=' EXPRESION
+    EXPRESSION '<' '=' EXPRESSION
     {
         $$ = new Relational($1, $4, OpRelational.LESS_EQUALS, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '>' '=' EXPRESION
+    EXPRESSION '>' '=' EXPRESSION
     {
         $$ = new Relational($1, $4, OpRelational.HIGHER_EQUALS, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '==' EXPRESION
+    EXPRESSION '==' EXPRESSION
     {
         $$ = new Relational($1, $3, OpRelational.EQUALS, @1.first_line,@1.first_column);
     } 
     |
-    EXPRESION '!=' EXPRESION
+    EXPRESSION '!=' EXPRESSION
     {
         $$ = new Relational($1, $3, OpRelational.DISCTINCT, @1.first_line,@1.first_column);
     }
     |
-    EXPRESION '&&' EXPRESION
+    EXPRESSION '&&' EXPRESSION
     {
         $$ = new Logical($1, $3, OpLogical.AND, @1.first_line,@1.first_column);
     }
     |
-    EXPRESION '||' EXPRESION
+    EXPRESSION '||' EXPRESSION
     {
         $$ = new Logical($1, $3, OpLogical.OR, @1.first_line,@1.first_column);
     }
     |
-    '!' EXPRESION
+    '!' EXPRESSION
     {
         $$ = new Logical($2, $2, OpLogical.NOT, @1.first_line,@1.first_column);
     }
     |
-    EXPRESION '+' '+'
+    EXPRESSION '+' '+'
     {
         $$ = new Arithmetic($1, $1, OpArithmetic.INCREASE, @1.first_line,@1.first_column);
     }
     |
-    EXPRESION '-' '-'
+    EXPRESSION '-' '-'
     {
         $$ = new Arithmetic($1, $1, OpArithmetic.DECREME, @1.first_line,@1.first_column);
     }
@@ -499,10 +512,14 @@ EXPRESION
     {
         $$ = $1
     }
+
+    
+
+    
 ;
 
 IDENTIFICADOR
-    : '(' EXPRESION ')'
+    : '(' EXPRESSION ')'
     {
         $$ = $2;
     }
@@ -568,14 +585,14 @@ RETURN
     {
         $$ = {node: newNode(yy, yystate, $1, $2)};
     }
-    | 'RESERV_RETURN' EXPRESION ';'
+    | 'RESERV_RETURN' EXPRESSION ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2.node, $3)};
     }
 ;
 
 IF 
-    : 'RESERV_IF' '(' EXPRESION ')' SENTENCIA ELIF
+    : 'RESERV_IF' '(' EXPRESSION ')' SENTENCIA ELIF
     {
         $$ = new IF($3, $5, $6, @1.first_line, @1.first_column);
     }
@@ -610,21 +627,21 @@ ELIF
 ;
 
 WHILE 
-    : 'RESERV_WHILE' '(' EXPRESION ')' SENTENCIA
+    : 'RESERV_WHILE' '(' EXPRESSION ')' SENTENCIA
     {
         $$ = new While($3, $5, @1.first_line, @1.first_column);
     }
 ;
 
 DOWHILE 
-    : 'RESERV_DO' SENTENCIA 'RESERV_WHILE' '(' EXPRESION ')' ';'
+    : 'RESERV_DO' SENTENCIA 'RESERV_WHILE' '(' EXPRESSION ')' ';'
     {
         $$ = new DoWhile($5, $2, @1.first_line, @1.first_column);
     }
 ;
 
 SWITCH
-    : 'RESERV_SWITCH' '(' EXPRESION ')' '{' CASES DEFAULT '}'
+    : 'RESERV_SWITCH' '(' EXPRESSION ')' '{' CASES DEFAULT '}'
     {
         if($7 == undefined) {
             $$ = new Switch($3, $6,null, @1.first_line, @1.first_column);
@@ -647,7 +664,7 @@ CASES
 ;
 
 CASE
-    : 'RESERV_CASE'  EXPRESION ':' INSTRUCCIONES 
+    : 'RESERV_CASE'  EXPRESSION ':' INSTRUCCIONES 
     {
         var sent = new Sentence($4, @1.first_line, @1.first_column)
         //private condition: Expression,private code: Sentence,row: number,column: number
@@ -668,7 +685,7 @@ DEFAULT
 ;
 
 FOR 
-    : 'RESERV_FOR' '(' DECLA_FOR ';' EXPRESION ';' EXPRESION ')' SENTENCIA
+    : 'RESERV_FOR' '(' DECLA_FOR ';' EXPRESSION ';' EXPRESSION ')' SENTENCIA
     {
         $$ = new FOR($3, $5, $7, $9, @1.first_line, @1.first_column);
     }
@@ -698,33 +715,33 @@ FOR
 
 DECLA_FOR
     : DECLARACION_FOR  { $$ = $1 }
-    | ID '=' EXPRESION { $$ = new NoType($1, $3, @1.first_line, @1.first_column); }
+    | ID '=' EXPRESSION { $$ = new NoType($1, $3, @1.first_line, @1.first_column); }
     ;
 
 
 DECLARACION_FOR
-    : 'RESERV_VAR' ID ':' TIPO '=' EXPRESION
+    : 'RESERV_VAR' ID ':' TIPO '=' EXPRESSION
     {
          $$ = new Declaration($2, $4, $6, @1.first_line, @1.first_column);
     }
     |
-    'RESERV_VAR' ID '=' EXPRESION
+    'RESERV_VAR' ID '=' EXPRESSION
     {
         $$ = new Declaration($2, 0, $4, @1.first_line, @1.first_column);
     }
-    | 'RESERV_LET' ID ':' TIPO '=' EXPRESION
+    | 'RESERV_LET' ID ':' TIPO '=' EXPRESSION
     {
         $$ = new Declaration($2, $4, $6, @1.first_line, @1.first_column);
     }
     |
-    'RESERV_LET' ID '=' EXPRESION
+    'RESERV_LET' ID '=' EXPRESSION
     {
          $$ = new Declaration($2, 0, $4, @1.first_line, @1.first_column);
     }
 ;
 
 CONSOLE: 
-    'RESERV_CONSOLE' '.' 'RESERV_LOG' '(' EXPRESION ')' ';'
+    'RESERV_CONSOLE' '.' 'RESERV_LOG' '(' EXPRESSION ')' ';'
     {
         $$ =  new Console($5, @1.first_line, @1.first_column)
     }
@@ -816,12 +833,12 @@ LLAMADA_FUNCION:
 ;
 
 PARAMETROS_LLAMADA: 
-    PARAMETROS_LLAMADA ',' EXPRESION
+    PARAMETROS_LLAMADA ',' EXPRESSION
     {
         $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node)};
     }
     |
-    EXPRESION
+    EXPRESSION
     {
         $$ = {node: newNode(yy, yystate, $1.node)};
     }
