@@ -22,6 +22,7 @@
     const { Break } = require('../tools/sentences/Break');
     const { Arrays } = require('../tools/declaration_type/Arrays');
     const { ArrayObject } = require('../tools/declaration_type/ArrayObject');
+    const { ArrayParam } = require('../tools/model/ArrayParam');
     const { Pushs } = require('../tools/sentences/Push');
     const { Pop } = require('../tools/sentences/Pop');
 
@@ -325,31 +326,43 @@ ARRAY_CONTENT
 MORE_ARRAY
     : EXPRESSION
     {
-        $$= $1
+        var cont = new ArrayParam($1, false);
+        $$= cont
     }
     | '[' ARRAY_CONTENT ']' 
     {
-        $$ = $2
-    
+        var cont = new ArrayParam($2, true);
+        $$= cont    
     }
     ;
 
 
 
+PRODUCCION_ID
+    : ID  MATRIZ_IDEN '.'   { $$ = $1 + $2 }  
+    | ID  MATRIZ_IDEN       { $$ = $1 + $2 }
+    | ID  '.'               { $$= $1 }
+    | ID                    { $$= $1 }
+    ;
 
 PUSH
-    :   ID '.' 'RESERV_PUSH' '(' EXPRESSION ')' ';'
+    :   PRODUCCION_ID  'RESERV_PUSH' '(' EXPRESSION ')' ';'
     {
-        $$ = new Pushs($1, $5, @1.first_line, @1.first_column)
+        $$ = new Pushs($1, $4, @1.first_line, @1.first_column)
     }
     ;
 
+
+
+
 POP 
-    :   ID '.' 'RESERV_POP' '(' ')'
+    :   PRODUCCION_ID 'RESERV_POP' '(' ')' 
     {
         $$ = new Pop($1, @1.first_line, @1.first_column)
     }
     ;
+
+
 //////////////// END ARRAY   ///////////////////////
 
 CONST_DECLARATION
@@ -543,16 +556,27 @@ IDENTIFICADOR
     { 
         $$ = new Literal($1, @1.first_line, @1.first_column, 2)
     }
-    | ID '[' IDEN_ARRAY ']' //esto es para arreglos
+    /*| ID  MATRIZ_IDEN //esto es para arreglos y matrices
     { 
-        $$ = new Access($1 + '[' + $3 + ']', @1.first_line, @1.first_column)
-    }
-    | ID
+        $$ = new Access($1 + $2, @1.first_line, @1.first_column)
+    }*/
+    | PRODUCCION_ID
     { 
         $$ = new Access($1, @1.first_line, @1.first_column)
     }
     
 ;
+
+MATRIZ_IDEN
+    : MATRIZ_IDEN '[' IDEN_ARRAY ']'
+    { 
+        $$ = $1 + '[' + $3 + ']'
+    }
+    | '[' IDEN_ARRAY ']'
+    { 
+        $$ = '[' + $2 + ']'
+    }
+    ;
 
 IDEN_ARRAY 
     :

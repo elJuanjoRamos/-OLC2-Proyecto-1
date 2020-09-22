@@ -13,6 +13,16 @@ export class Pop extends Instruction {
 
     public exec(ambit: Ambit) {
 
+
+        var nombreArregloOriginal = "";
+        var esArregloDeArreglos: boolean = false;
+        if (this.id.includes("[") && this.id.includes("]")) {
+            var t = this.id.split("[");
+            nombreArregloOriginal = t[0];
+            esArregloDeArreglos = true
+        } 
+
+
         var variable = ambit.getVariable(this.id) // obtengo la variable
         var arregloElementos:any[] = [];
         var arregloTemporal:any[] = [];
@@ -40,11 +50,16 @@ export class Pop extends Instruction {
 
                             ambit.setVariable(variable.id, arregloTemporal, variable.type)
 
-                            return arregloElementos.pop();
+                            console.log(variable);
+                            var a = ambit.getVariable(nombreArregloOriginal)
+                            console.log(a);
+                            return (arregloElementos.pop()).getElement();
                         } 
 
                         if (arregloElementos.length == 1) {
                             ambit.setVariable(variable.id, arregloTemporal, variable.type)
+
+
 
                             return arregloElementos.pop();    
                         }
@@ -63,24 +78,7 @@ export class Pop extends Instruction {
                     ErrorController.getInstance().add("El arreglo " + this.id + " no contiene elementos", "Semántico", this.column, this.row);
                     return {value: 'undefined'};
                 }
-                
-
-                    
-
-
-                   
-                    // LE SETEO EL NUEVO ARREGLO DE ELEMENTOS AL ARREGLO
-                  //  ambit.setVariable(variable.id, arregloElementos, variable.type)
-
-
-
-                   
-                    // GUARDO LA POSICION +1 DEL ARREGLO
-
-                   // ambit.save(this.id + '[' + (arregloElementos.length-1) + ']' , temp.value, temp.type); 
-                
-                    
-                
+                            
             } else {
                 ErrorController.getInstance().add("La variable " + this.id + " no es un Array", "Semántico", this.column, this.row);
                 return {value: 'undefined'};

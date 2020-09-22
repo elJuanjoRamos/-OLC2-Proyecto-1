@@ -3,6 +3,7 @@ import { Expression } from '../abstract/expression';
 import { ErrorController } from '../../../components/controller/error.controller';
 import { Type } from '../abstract/type';
 import { Ambit } from '../id/ambit.identifier';
+import { ArrayParam } from '../model/ArrayParam';
 
 
 
@@ -14,58 +15,62 @@ export class Pushs extends Instruction {
 
     public exec(ambit: Ambit) {
 
+        
+
         var variable = ambit.getVariable(this.id) // obtengo la variable array al que le voy a insertar
 
-        if (variable != null) { //VERIFICO QUE NO SEA NULA
-            
-            
+        if(variable != null){//VERIFICO QUE NO SEA NULA
+
+        
             if (this.getType(variable.type).includes('ARRAY')) { // VERIFICO QUE SEA ARRAY
 
-
-                
+                ///*
                 var temp = this.value.exec(ambit) //OBTENGO EL ELEMENTO POR GUARDAR
-
-
-
-
-
+            
+            
                 if (this.getType(variable.type).includes(this.getType(temp.type)) 
                     || this.getType(variable.type) == 'ARRAYANY') { //VERIFICO QUE LOS TIPOS SEAN IGUALES
+            
+            
+                    var arregloElementos:any[] = []; //SIRVE EN LA EJECUCION NORMAL
 
-
-                    var arregloElementos:any[] = [];
-
-                    if (variable.value != null) {
+                    if (variable.value != null) { // VERIFICO QUE LOS VALORES DEL ARREGLO A PUSHAR NO SEAN NULOS
                         
                         arregloElementos = variable.value
                     } 
-
+            
                     
 
-                    arregloElementos.push(this.value)
-
-                    // LE SETEO EL NUEVO ARREGLO DE ELEMENTOS AL ARREGLO
+                    arregloElementos.push(new ArrayParam(this.value, false)) //PUSHEO EL NUEVO ELEMENTO
+            
+                    // LE SETEO EL NUEVO ARREGLO DE ELEMENTOS AL ARREGLO QUE YA TENIA
                     ambit.setVariable(variable.id, arregloElementos, variable.type)
-
-
-
-                   
+            
+             
                     // GUARDO LA POSICION +1 DEL ARREGLO
-
                     ambit.save(this.id + '[' + (arregloElementos.length-1) + ']' , temp.value, temp.type); 
                 
-
+            
                 } else { // SI NO SON IGUALES MARCA ERROR SEMANTICO
                     ErrorController.getInstance().add("No se puede asignar el tipo " + this.getType(temp.type)
                         + " al tipo " + this.getType(variable.type), "Semántico", this.column, this.row);
-                }
+                }//*/
+            
             } else {
                 ErrorController.getInstance().add("La variable " + this.id + " no es un Array", "Semántico", this.column, this.row);
-
+            
             }
-        } else {
+        
+
+        }else {
             ErrorController.getInstance().add("La variable " + this.id + " no está declarada", "Semántico", this.column, this.row);
         }
+
+        
+
+
+        
+        
 
     }
 

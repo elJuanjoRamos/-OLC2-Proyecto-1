@@ -16,27 +16,28 @@ export class ArrayObject extends Instruction {
 
     public exec(ambit: Ambit) {
 
+        var newAmbit = new Ambit(ambit);
         if (this.values != null) {
             
 
             if (this.values.length == 1) {
-                var data = this.values[0].exec(ambit)
+                var data = this.values[0].exec(newAmbit)
                 
                 if (data.type == 0) { // significa que en el constructor vino un numero, ese numero va a ser el lenght del arreglo
                     this.lenght = data.value
-                    ambit.save(this.id, null, this.getArrayType(this.type)); //GUARDO EL ARREGLO
+                    newAmbit.save(this.id, null, this.getArrayType(this.type)); //GUARDO EL ARREGLO
                 }  
             }
 
             else {
-                ambit.save(this.id, this.values, this.getArrayType(this.type)); //GUARDO EL ARREGLO
+                newAmbit.save(this.id, this.values, this.getArrayType(this.type)); //GUARDO EL ARREGLO
                 this.lenght = this.values.length;
                 var flag = true;
 
 
                 for (let index = 0; index < this.values.length; index++) { //ITERO SOBRE LOS ELEMENTOS
                     const element = this.values[index];
-                    var temp = element.exec(ambit) //OBTENGO EL ELEMENTO
+                    var temp = element.exec(newAmbit) //OBTENGO EL ELEMENTO
     
     
                     if ((this.getType(this.type) != this.getType(temp.type)) && this.getType(this.type) != 'ARRAYANY' ) { //VERIFICO QUE LOS TIPOS SEAN IGUALES
@@ -52,14 +53,14 @@ export class ArrayObject extends Instruction {
                 if (flag) {
                     for (let index = 0; index < this.values.length; index++) { //ITERO SOBRE LOS ELEMENTOS
                         const element = this.values[index];
-                        var temp = element.exec(ambit) //OBTENGO EL ELEMENTO
-                        ambit.save(this.id + '[' + index + ']', temp.value, temp.type); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
+                        var temp = element.exec(newAmbit) //OBTENGO EL ELEMENTO
+                        newAmbit.save(this.id + '[' + index + ']', temp.value, temp.type); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
     
                     }
                 }
             }
         } else {
-            ambit.save(this.id, null, this.getArrayType(this.type));
+            newAmbit.save(this.id, null, this.getArrayType(this.type));
         }
 
     }

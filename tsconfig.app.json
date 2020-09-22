@@ -32,6 +32,7 @@
     "src/app/jison/tools/sentences/Pop.ts",
     "src/app/jison/tools/declaration_type/Arrays.ts",
     "src/app/jison/tools/declaration_type/ArrayObject.ts",
+    "src/app/jison/tools/model/ArrayParam.ts",
     
 
   ],
