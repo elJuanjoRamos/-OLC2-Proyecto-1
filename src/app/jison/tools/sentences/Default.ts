@@ -13,8 +13,8 @@ export class Default extends Instruction {
     }
 
     public exec(ambit : Ambit) {
-        
-        const element = this.code.exec(ambit);
+        var newAmbit = new Ambit(ambit);
+        const element = this.code.exec(newAmbit);
 
         if(element != null || element != undefined){
             if(element.type == 'break')

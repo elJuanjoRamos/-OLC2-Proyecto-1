@@ -1,10 +1,8 @@
 import { Instruction } from '../abstract/instruction';
-import { Expression } from '../abstract/expression';
 import { ErrorController } from '../../../components/controller/error.controller';
 import { Type } from '../abstract/type';
 import { Ambit } from '../id/ambit.identifier';
 import { ArrayParam } from '../model/ArrayParam';
-import { abort } from 'process';
 
 
 export class Arrays extends Instruction {

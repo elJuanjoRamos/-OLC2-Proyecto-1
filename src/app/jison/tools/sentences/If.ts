@@ -17,18 +17,22 @@ export class IF extends Instruction {
 
 
 
-        var newAmbit = new Ambit(ambit);
+        var ifAmbit = new Ambit(ambit);
 
-        const condition = this.condition.exec(newAmbit);
+        const condition = this.condition.exec(ifAmbit);
         if(condition.type != Type.BOOLEAN){
             ErrorController.getInstance().add("La condicion no es booleana", "Semantico" ,this.row, this.column);
         }
 
         if(condition.value == true){
-            return this.code.exec(newAmbit);
+            if (this.code != null) {
+                return this.code.exec(ifAmbit);                
+            }
         }
         else{
-            return this.elseDeclaracion?.exec(newAmbit);
+            
+            var elseAmbit = new Ambit(ambit);
+            return this.elseDeclaracion?.exec(elseAmbit);
         }
     }
 }

@@ -1,3 +1,4 @@
+import { ErrorController } from 'src/app/components/controller/error.controller';
 import { Instruction } from '../abstract/instruction';
 import { Ambit } from '../id/ambit.identifier';
 import { Declaration } from './Declaration';
@@ -58,41 +59,8 @@ export class FORIN extends Instruction {
 
                 }
             }
+        } else {
+            ErrorController.getInstance().add("La variable "  + this.array + " no existe o no es un arreglo", "Semántico", this.column, this.row);
         }
-
-        /* this.declaration.exec(ambit)
-        
-        var forCondition = this.condition.exec(ambit);
-
-        if(forCondition.type != Type.BOOLEAN){
-            throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
-        }
-
-        while(forCondition.value == true){
-
-           
-            const element = this.sentencias.exec(ambit);
-   
-
-            if(element != null || element != undefined){
-                if(element.type == 'break')
-                    break;
-                else if(element.type == 'continue')
-                    this.incrementDecrement.exec(ambit);
-                    continue;
-            }
-
-            const val = this.incrementDecrement.exec(ambit);
-           
-            
-            ambit.setVariable(this.declaration.getId(), val.value, val.type)
-            
-
-            forCondition = this.condition.exec(ambit);
-
-            if(forCondition.type != Type.BOOLEAN){
-                throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
-            }
-        }*/
     }
 }

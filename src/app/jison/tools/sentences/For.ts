@@ -5,6 +5,7 @@ import { Ambit } from '../id/ambit.identifier';
 import { NoType } from './NoType';
 import { Declaration } from './Declaration';
 import { Sentence } from './Sentence';
+import { ErrorController } from '../../../components/controller/error.controller';
 
 export class FOR extends Instruction {
 
@@ -30,7 +31,7 @@ export class FOR extends Instruction {
         var forCondition = this.condition.exec(newAmbit);
 
         if(forCondition.type != Type.BOOLEAN){
-            throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
+            ErrorController.getInstance().add("La condicion del For no es booleana", "Semántico", this.column, this.row);
         }
 
        // let temporal: any = this.sentencias
@@ -58,7 +59,7 @@ export class FOR extends Instruction {
                 forCondition = this.condition.exec(newAmbit);
     
                 if(forCondition.type != Type.BOOLEAN){
-                    throw {error: "La condicion no es booleana", linea: this.row, column: this.column};
+                    ErrorController.getInstance().add("La condicion del For no es booleana", "Semántico", this.column, this.row);
                 }
             }
         //}

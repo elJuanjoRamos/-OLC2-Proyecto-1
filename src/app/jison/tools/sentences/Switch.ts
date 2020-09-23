@@ -38,7 +38,7 @@ export class Switch extends Instruction{
             }
         }
 
-        if (numeroCaso == -1) { //SIGNIFICA QUE ENCONTRO COINCIDENCIAS DENTRO DE LOS CASOS
+        if (numeroCaso == -1 &&  this.def != null) { //SIGNIFICA QUE ENCONTRO COINCIDENCIAS DENTRO DE LOS CASOS
             if (this.def != null) {
                 this.def.exec(ambit)                
             }  

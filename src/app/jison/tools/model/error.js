@@ -1,10 +1,10 @@
 export class Error {
-    constructor(i,des, l, c, le){
-        this.id = i;
-        this.line = l;
-        this.column = c;
-        this.description = des;
-        this.lex = le;
+    constructor(id, descrip, type, row, col){
+        this.id = id;
+        this.row = row;
+        this.column = col;
+        this.description = descrip;
+        this.lex = type;
     }
 
 

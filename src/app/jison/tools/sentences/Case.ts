@@ -1,9 +1,7 @@
 import { Instruction } from '../abstract/instruction';
-import {Type} from '../abstract/type'
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
 import { Sentence } from './Sentence';
-import { flushMicrotasks } from '@angular/core/testing';
 
 
 export class Case extends Instruction {
@@ -15,7 +13,8 @@ export class Case extends Instruction {
 
     public exec(ambit: Ambit){
 
-        const element = this.code.exec(ambit);
+        var newAmbit = new Ambit(ambit);
+        const element = this.code.exec(newAmbit);
         
         if(element != null || element != undefined){
             if(element.type == 'break')
