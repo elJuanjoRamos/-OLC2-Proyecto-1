@@ -108,6 +108,7 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 "new"                   return 'RESERV_NEW'
 "Array"                 return 'RESERV_ARRAY'
 "any"                   return 'RESERV_ANY'
+"length"                return 'RESERV_LENGTH'
 
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'ID';
 <<EOF>>               return 'EOF';
@@ -207,12 +208,12 @@ INSTRUCCION
         $$ = $1
     }
     |
-    LLAMADA_FUNCION
+    CALL_FUNCTION
     {
         $$ = {node: newNode(yy, yystate, $1.node)};
     }
     |
-    FUNCIONES
+    FUNCTIONS
     {
         $$ = $1;
     }
@@ -298,7 +299,7 @@ LET_DECLARATION
 
 //////////// ARRAY ///////////
 ARRAY
-    : '[' ']'
+    : '[' ']' {  }
     
     /*| '[' ']' '[' ']'
     { 
@@ -340,10 +341,11 @@ MORE_ARRAY
 
 
 PRODUCCION_ID
-    : ID  MATRIZ_IDEN '.'   { $$ = $1 + $2 }  
-    | ID  MATRIZ_IDEN       { $$ = $1 + $2 }
-    | ID  '.'               { $$= $1 }
-    | ID                    { $$= $1 }
+    : ID  MATRIZ_IDEN '.'           { $$ = $1 + $2 }  
+    | ID  MATRIZ_IDEN               { $$ = $1 + $2 }
+    | ID  '.'  'RESERV_LENGTH'      { $$= $1 }
+    | ID  '.'                       { $$= $1 }
+    | ID                            { $$= $1 }
     ;
 
 PUSH
@@ -772,7 +774,7 @@ CONSOLE:
     }
 ;
 
-FUNCIONES: 
+FUNCTIONS: 
     'RESERV_FUNCTION' ID '(' ')' SENTENCIA_FUNCION
     {
         $$ = $1;
@@ -845,7 +847,7 @@ PARAMETRO:
     }
 ;
 
-LLAMADA_FUNCION:
+CALL_FUNCTION:
     ID '(' ')' ';'
     {
         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4)};

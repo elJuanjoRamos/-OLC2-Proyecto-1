@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import * as parser from '../../jison/grammar/gram';
 import * as analisis from '../../jison/grammar/analisis';
+import * as astGraph from '../../jison/tools/ast/ast';
 import { OutputController } from '../controller/output.controller';
 import { Ambit } from '../../jison/tools/id/ambit.identifier';
 import { ErrorController } from '../controller/error.controller';
-import { flushMicrotasks } from '@angular/core/testing';
-
 
 
 @Component({
@@ -25,6 +24,9 @@ export class DashboardComponent implements OnInit {
   strSalida:string;
   textoSalida: string;
   analize() {
+    if (document.getElementById("grafo")) {
+        document.getElementById("grafo").remove();
+    }
     try {
       /**
        * LIMPIAR VARIABLES
@@ -32,13 +34,15 @@ export class DashboardComponent implements OnInit {
       OutputController.getinstance().clear();
       console.clear()
       const env = new Ambit(null);
-      //let graficaAST = parser.parse(this.strEntrada);
-      let analisisAST = analisis.parse(this.strEntrada);
-
+      //let analisisAST = analisis.parse(this.strEntrada);
+      let analisisGraico = parser.parse(this.strEntrada)
       setTimeout(() => {
-          //graficar.generateTree([graficaAST.node]);
       }, 1000);
 
+
+      
+      astGraph.generarArbol([analisisGraico.node]);
+      
      /* var arreglo1: string[] = []
 
       var arreglo1: string[]; 
@@ -58,7 +62,7 @@ export class DashboardComponent implements OnInit {
       /**
        * EJECUTAR EJECUCION
        */
-      for(const instr of analisisAST){
+     /* for(const instr of analisisAST){
         try {
             const actual = instr.exec(env);
             if(actual != null || actual != undefined){
@@ -68,7 +72,7 @@ export class DashboardComponent implements OnInit {
         } catch (error) {
             console.error(error)
         }
-      }
+      }*/
     } catch (error) {
       /**
        * INGRESAR ERRORES PARA REPORTE

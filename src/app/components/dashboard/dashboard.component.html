@@ -1,82 +1,143 @@
-<div class="container-fluid container-full-height">
-  <div class="row row-full-height">
-    <div class="col-sm-6 col-md-6 col-full-height col-vertical-height login-form">
-      <div class="col-vertical-top">
-        <form class="form-horizontal justify-content-center" role="form">
-         
-          <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active justify-content-center" id="nav-home0" role="tabpane0"
-              aria-labelledby="nav-home-tab">
-              <br>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <button class="btn btn-outline-success" (click)="analize()"
-                    type="button">Analizar</button>
-                </div>
-              </div>
-              
-              <!--<textarea #textArea id="textArea0" style="width: 100%; height: 460px;"></textarea>-->
-              <div>
-                <textarea class="rownr" style="height: 500px;" rows="20" cols="3" value="1" readonly></textarea>
-                <span>
-                  <textarea  class="txt" [(ngModel)]="strEntrada" name="entrada"  id="textArea0" style="width: 90%; height: 500px;" nowrap="nowrap" wrap="off"
-                  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-                  oninput="input_changed(this)" onchange="input_changed(this)" onscroll="scroll_changed(this)"></textarea><br/><br/>
-                </span>
-              </div>
-            </div>
-            
-          </div>
-        </form>
-        <br>
-
-      
-      </div>
+<div class="container">
+  <div>
+      <ul class="nav nav-tabs justify-content-center" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#home" role="tab">
+            <i class="now-ui-icons objects_file_paper"></i> Archivo
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#ast" role="tab">
+            <i class="now-ui-icons object_ast"></i> Ast
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#reports" role="tab">
+            <i class="now-ui-icons object_report"></i> Reportes
+          </a>
+        </li>
+      </ul>
     </div>
-    <div class="hidden-xs col-sm-6 col-md-6 col-full-height login-main-content">
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-          <div class="content-box">
-            <br>
-            <h3 class="content-box-title">Traductor</h3>
-            <div class="content-box-text">
-              <ul class="nav nav-tabs" id="myTab1" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" id="home-tab1" data-toggle="tab" href="#home1" role="tab" aria-controls="home" aria-selected="true">CONSOLA</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="profile-tab1" data-toggle="tab" href="#profile1" role="tab" aria-controls="profile" aria-selected="false">TRADUCCION</a>
-                </li>
-              </ul>
-              <div class="tab-content" id="myTabContent1">
-                <div class="tab-pane fade show active" id="home1" role="tabpanel" aria-labelledby="home-tab1">
-                  <div class="terminal" style="width: 100%; height: 460px;">
-                    <!--<pre *ngSwitchDefault>ng generate component xyz</pre>
-                      <pre *ngSwitchCase="'material'">ng add @angular/material</pre>
-                      <pre *ngSwitchCase="'pwa'">ng add @angular/pwa</pre>
-                      <pre *ngSwitchCase="'dependency'">ng add _____</pre>
-                      <pre *ngSwitchCase="'test'">ng test</pre>
-                      <pre *ngSwitchCase="'build'">ng build --prod</pre>-->
-                    <pre>{{textoSalida}}</pre>
+</div>
+<div class="tab-content">
+  <!-- Tab panes -->
+  <div class="tab-content text-center">
+    <div class="tab-pane active" id="home" role="tabpanel">
+      
+      
+      
+      
+
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-md-10 ml-auto col-xl-6 mr-auto">
+            <p class="category">Area de traduccion y ejecucion</p>
+            <!-- Nav tabs -->
+            <div class="card">
+              <div class="card-header">
+                
+              </div>
+              <div class="card-body">
+               
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <button class="btn btn-outline-success" (click)="analize()"
+                      type="button">Analizar</button>
                   </div>
                 </div>
-                <div class="tab-pane fade" id="profile1" role="tabpanel" aria-labelledby="profile-tab1">
-                  <textarea [(ngModel)]="strSalida" name="salida" readonly id="textAreaTraduccion" style="width: 100%; height: 460px;"></textarea>
+                
+                <!--<textarea #textArea id="textArea0" style="width: 100%; height: 460px;"></textarea>-->
+                <div>
+                  <textarea class="rownr" style="height: 500px;" rows="20" cols="3" value="1" readonly></textarea>
+                  <span>
+                    <textarea  class="txt" [(ngModel)]="strEntrada" name="entrada"  id="textArea0" style="width: 90%; height: 500px;" nowrap="nowrap" wrap="off"
+                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                    oninput="input_changed(this)" onchange="input_changed(this)" onscroll="scroll_changed(this)"></textarea><br/><br/>
+                  </span>
                 </div>
+
               </div>
             </div>
           </div>
+          <div class="col-md-10 ml-auto col-xl-6 mr-auto">
+            <p class="category">Area de consola</p>
+            <!-- Tabs with Background on Card -->
+            <div class="card">
+              
+              <div class="card-body">
+                
+                <textarea [(ngModel)]="strSalida" name="salida" readonly id="textAreaTraduccion" style="width: 100%; height: 575px;"></textarea>
+            
+              </div>
+            </div>
+            <!-- End Tabs on plain Card -->
+          </div>
         </div>
-      
       </div>
     </div>
+    <div class="tab-pane" id="ast" role="tabpanel" style='overflow-x:scroll;overflow-y:hidden;width:1920;'>
 
+
+      <div >
+        <div id="graph-container" name="graph-container">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet"></svg>
+        </div>  
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    </div>
+    <div class="tab-pane" id="reports" role="tabpanel">
+      
+      <div>
+        <ul class="nav nav-tabs justify-content-center" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#lex" role="tab">
+              <i class="now-ui-icons object_lexico"></i> Lexico
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#sint" role="tab">
+              <i class="now-ui-icons object_sintactico"></i> Sintactico
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#tabla" role="tab">
+              <i class="now-ui-icons object_tabla"></i> Tabla Simbolos
+            </a>
+          </li>
+        </ul>
+
+      </div>
+      <div class="tab-content">
+        <!-- Tab panes -->
+    <div class="tab-content text-center">
+      <div class="tab-pane active" id="lex" role="tabpanel">
+        <p>I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it’s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
+      </div>
+      <div class="tab-pane" id="sint" role="tabpanel">
+        <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
+      </div>
+      <div class="tab-pane" id="tabla" role="tabpanel">
+        <p>I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it’s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
+      </div>
+      
+    </div>
+      </div>
+
+    </div>
+    
   </div>
 </div>
 
-<div class="container" style="width: 1024px;">
-  
 
-</div> <!-- /container -->
+
 
 
