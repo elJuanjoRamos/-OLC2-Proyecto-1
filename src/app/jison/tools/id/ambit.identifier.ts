@@ -1,6 +1,8 @@
 
 import { Type } from '../abstract/type';
 import { Identifier } from './Identifier';
+import { Function } from '../sentences/Function';
+
 
 export class Ambit {
     private variables: Map<string, Identifier>;
@@ -16,37 +18,74 @@ export class Ambit {
     }
 
 
-    public getVariable(id: string) : Identifier | undefined | null{
-        let env : Ambit | null = this;
-        while(env != null){
-            if(env.variables.has(id)){
-                return env.variables.get(id);
+    public getVariable(id) : Identifier | undefined | null{
+        let amb : Ambit | null = this;
+        while(amb != null){
+            if(amb.variables.has(id)){
+                return amb.variables.get(id);
             }
-            env = env.anterior;
+            amb = amb.anterior;
         }
         return null;
     }
 
-    public setVariable(id: string, valor: any, type: Type){
-        let env : Ambit | null = this;
-        while(env != null){
-            if(env.variables.has(id)){
-                env.variables.set(id, new Identifier(valor, id, type))
+    public setVariable(id, valor: any, type: Type){
+        let amb : Ambit | null = this;
+        while(amb != null){
+            if(amb.variables.has(id)){
+                amb.variables.set(id, new Identifier(valor, id, type))
                 return;
             }
-            env = env.anterior;
+            amb = amb.anterior;
         }
     }
 
-    public save(id: string, valor: any, type: Type){
-        let env : Ambit | null = this;
-        while(env != null){
-            if(env.variables.has(id)){
-                env.variables.set(id, new Identifier(valor, id, type));
+    public save(id, valor: any, type: Type){
+        let amb : Ambit | null = this;
+        while(amb != null){
+            if(amb.variables.has(id)){
+                amb.variables.set(id, new Identifier(valor, id, type));
                 return;
             }
-            env = env.anterior;
+            amb = amb.anterior;
         }
         this.variables.set(id, new Identifier(valor, id, type));
     }
+
+
+
+
+
+    public getFunc(id) : Function | undefined{
+        let amb : Ambit | null = this;
+        while(amb != null){
+            if(amb.functions.has(id)){
+                return amb.functions.get(id);
+            }
+            amb = amb.anterior;
+        }
+        return undefined;
+    }
+
+    public getGlobal() : Ambit{
+        let amb : Ambit | null = this;
+        while(amb?.anterior != null){
+            amb = amb.anterior;
+        }
+        return amb;
+    }
+
+    public saveFunc(id, funcion){
+        this.functions.set(id, funcion);
+    }
+
+
+
+
+
+
+
+
+
+
 }

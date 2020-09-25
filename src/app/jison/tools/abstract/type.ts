@@ -8,6 +8,7 @@ export enum Type {
     ARRAYBOOLEAN= 6,
     ARRAYANY= 7,
     ANY = 8,
+    TYPE = 9
 }
 
 export enum OpRelational{
@@ -47,6 +48,7 @@ export enum Transfer {
 
 export type Returned ={
     value : any,
+    valor?: any,
     type : Type
 }
 
