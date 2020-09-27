@@ -2,7 +2,7 @@ import { Instruction } from '../abstract/instruction';
 import { ErrorController } from '../../../components/controller/error.controller';
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
-import { Type } from '../abstract/type';
+import { TypeAll } from '../abstract/enums';
 
 export class NoType extends Instruction{
     private type: any;
@@ -15,49 +15,52 @@ export class NoType extends Instruction{
     public exec(ambit: Ambit) {
         try {
             const val = this.value.exec(ambit);
-            // TODO: SIN TIPO
-            /**
-             * VALIDAR VALOR
-             */
-
+           
             const valor = ambit.getVariable(this.id);
-            console.log(valor);
+            
 
-
-            if (val.type == 0) {
-
-                switch (valor.type) {
-                    case 0:
-                        ambit.setVariable(this.id, val.value, val.type);        
-                        break;
-                    default:
-                        throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
-                        break;
-                }
-            } else if (val.type == 1) {
+            if (!valor.esconsante) {
                 
-                switch (valor.type) {
-                    case 1:
-                        ambit.setVariable(this.id, val.value, val.type);
-                        break;
-                    default:
-                        throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
-                        break;
-                }
-            } else if (val.type ==2) {
-                switch (valor.type) {
-                    case 2:
-                        ambit.setVariable(this.id, val.value, val.type);                        
-                        break;
-                    default:
-                        throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
-                    break;
-                }
-                
+                if (val.type == 0) {
+
+                                switch (valor.type) {
+                                    case 0:
+                                        ambit.setVariable(this.id, val.value, val.type, false);        
+                                        break;
+                                    default:
+                                        throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
+                                        break;
+                                }
+                            } else if (val.type == 1) {
+                                
+                                switch (valor.type) {
+                                    case 1:
+                                        ambit.setVariable(this.id, val.value, val.type, false);
+                                        break;
+                                    default:
+                                        throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
+                                        break;
+                                }
+                            } else if (val.type ==2) {
+                                switch (valor.type) {
+                                    case 2:
+                                        ambit.setVariable(this.id, val.value, val.type, false);                        
+                                        break;
+                                    default:
+                                        throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
+                                    break;
+                                }
+                                
+                            } else {
+                                throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
+                            }
             } else {
-                throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
+
+                throw {error: "No es posible cambiar el valor de la variable " + this.id +" por que es una constante " , row: this.row, column : this.column};
         
             }
+
+            
         } catch (error) {
             /**
              * INGRESAR ERRORES SEMANTICOS
@@ -70,7 +73,7 @@ export class NoType extends Instruction{
     public getId(): string{
         return this.id
     }
-    public getType(type: Type):string {
+    public getType(type: TypeAll):string {
         switch (type) {
             case 0:
                 return "NUMBER"

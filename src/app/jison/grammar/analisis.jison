@@ -1,13 +1,16 @@
  
 %{
-    const { OpRelational, OpLogical,OpArithmetic} = require('../tools/abstract/type');
+    const { OpRelational, OpLogical,OpArithmetic} = require('../tools/abstract/enums');
     const { Arithmetic} = require('../tools/expression/Arithmetic');
     const { Relational } = require('../tools/expression/Relational');
     const { Logical } = require('../tools/expression/Logical');
     const { Access } = require('../tools/expression/Access');
+    const { TypeAccess } = require('../tools/expression/TypeAccess');
     const { Literal } = require('../tools/expression/Literal');
+    const { ObjectLiteral } = require('../tools/expression/ObjectLiteral');
     const { Declaration } = require('../tools/sentences/Declaration');
     const { NoType } = require('../tools/sentences/NoType');
+    const { TypeNoType } = require('../tools/sentences/TypeNoType');
     const { Console } = require('../tools/sentences/Console');
     const { While } = require('../tools/sentences/While');
     const { DoWhile } = require('../tools/sentences/DoWhile');
@@ -25,6 +28,16 @@
     const { ArrayParam } = require('../tools/model/ArrayParam');
     const { Pushs } = require('../tools/sentences/Push');
     const { Pop } = require('../tools/sentences/Pop');
+    const { TypeValue } = require('../tools/sentences/TypeValue');
+    const { Return } = require('../tools/sentences/Return');
+    const { Continue } = require('../tools/sentences/Continue');
+    const { Type } = require('../tools/sentences/Type');
+    const { PrimType } = require('../tools/sentences/PrimType');
+    const { Call } = require('../tools/sentences/Call');
+    const { Function } = require('../tools/sentences/Function');
+    const { Constant } = require('../tools/sentences/Constant');
+        
+
 
 %}
 %lex
@@ -109,6 +122,7 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 "Array"                 return 'RESERV_ARRAY'
 "any"                   return 'RESERV_ANY'
 "length"                return 'RESERV_LENGTH'
+"type"                  return 'RESERV_TYPE'
 
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'ID';
 <<EOF>>               return 'EOF';
@@ -155,10 +169,15 @@ INSTRUCCION
     |
     CONST_DECLARATION
     {
-        $$ = {node: newNode(yy, yystate, $1.node)};
+        $$ = $1
     }
     |
     DECLARATION_NOTYPE
+    {
+        $$ = $1
+    }
+    |
+    TYPE_DECLARATION
     {
         $$ = $1
     }
@@ -170,12 +189,12 @@ INSTRUCCION
     |
     CONTINUE
     {
-        $$ = {node: newNode(yy, yystate, $1.node)};
+        $$ = $1
     }
     |
     RETURN
     {
-        $$ = {node: newNode(yy, yystate, $1.node)};
+        $$ = $1
     }
     |
     IF
@@ -210,7 +229,7 @@ INSTRUCCION
     |
     CALL_FUNCTION
     {
-        $$ = {node: newNode(yy, yystate, $1.node)};
+        $$ = $1;
     }
     |
     FUNCTIONS
@@ -222,11 +241,11 @@ INSTRUCCION
     {
         $$ = $1;
     }
-    |
-    POP
+    /*|
+    POP1
     {
         $$ = $1;
-    }
+    }*/
     
 ;
 
@@ -344,6 +363,7 @@ PRODUCCION_ID
     : ID  MATRIZ_IDEN '.'           { $$ = $1 + $2 }  
     | ID  MATRIZ_IDEN               { $$ = $1 + $2 }
     | ID  '.'  'RESERV_LENGTH'      { $$= $1 }
+    | ID  '.'   ID                  { $$ = new TypeAccess($1, $3, @1.first_line, @1.first_column) }
     | ID  '.'                       { $$= $1 }
     | ID                            { $$= $1 }
     ;
@@ -366,19 +386,30 @@ POP
     ;
 
 
+/*POP 
+    :   PRODUCCION_ID 'RESERV_POP' '(' ')' 
+    {
+        $$ = new Pop($1, @1.first_line, @1.first_column)
+    }
+    ;
+*/
+
 //////////////// END ARRAY   ///////////////////////
 
 CONST_DECLARATION
     : 'RESERV_CONST' ID ':' TIPO '=' EXPRESSION ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5, $6.node, $7)};
+        $$ = new Constant($2, $4, $6, @1.first_line, @1.first_column);
     }
     |
     'RESERV_CONST' ID '=' EXPRESSION ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5)};
+        $$ = new Constant($2, 7, $4, @1.first_line, @1.first_column);
     }
 ;
+
+
+
 
 DECLARATION_NOTYPE
     : ID ':' TIPO '=' EXPRESSION ';'
@@ -394,6 +425,16 @@ DECLARATION_NOTYPE
     ID '=' EXPRESSION ';'
     {
         $$ = new NoType($1, $3, @1.first_line, @1.first_column);
+    }
+    |
+    ID '.' ID '=' EXPRESSION ';'
+    {
+        $$ = new TypeNoType($1, $3, $5, @1.first_line, @1.first_column);
+    }
+    |
+    EXPRESSION ';'
+    {
+        $$ = $1
     }
 ;
 
@@ -413,6 +454,10 @@ TIPO
     | 'RESERV_ANY'
     { 
         $$ = 7;
+    }
+    | ID
+    { 
+        $$ = {type: 9, tipo: $1};
     }
 
 ;
@@ -528,7 +573,11 @@ EXPRESSION
     {
         $$ = $1
     }
-
+    |
+    JSON_EXPRESSION
+    {
+        $$ = $1
+    }
     
 
     
@@ -541,7 +590,11 @@ IDENTIFICADOR
     }
     | CADENA
     { 
-        $$ = new Literal($1, @1.first_line, @1.first_column, 1);
+        var cad = String($1)
+        cad = cad.replace('"', '')
+        cad = cad.replace('"', '')
+        //cad = cad.trim();
+        $$ = new Literal(cad, @1.first_line, @1.first_column, 1);
     }
     | NUMERO
     { 
@@ -593,6 +646,8 @@ IDEN_ARRAY
     }
     ;
 
+
+
 BREAK 
     : 'RESERV_BREAK'  ';'
     {
@@ -600,24 +655,25 @@ BREAK
     }
 ;
 
+
 CONTINUE 
     : 'RESERV_CONTINUE'  ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2)};
+        $$ = new Continue(@1.first_line, @1.first_column);
     }
 ;
 
 RETURN 
-    : 'RESERV_RETURN'  ';'
+    
+    : 'RESERV_RETURN' EXPRESSION ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2)};
+        $$ = new Return($2, @1.first_line, @1.first_column);
     }
-    | 'RESERV_RETURN' EXPRESSION ';'
+    | 'RESERV_RETURN'  ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2.node, $3)};
+        $$ = new Return(null, @1.first_line, @1.first_column);
     }
 ;
-
 IF 
     : 'RESERV_IF' '(' EXPRESSION ')' SENTENCIA ELIF
     {
@@ -774,20 +830,107 @@ CONSOLE:
     }
 ;
 
-FUNCTIONS: 
-    'RESERV_FUNCTION' ID '(' ')' SENTENCIA_FUNCION
+
+//================ JSON
+
+JSON_EXPRESSION
+    : '{' OBJECTS '}'
+    {
+        $$ = new ObjectLiteral($2, @1.first_line, @1.first_column);
+    }
+;
+
+
+OBJECTS
+    : 
+    OBJECTS ',' OBJECT
+    {
+        $1.push($3)
+        $$ = $1
+    }
+    | OBJECT
+    {
+        $$ = [$1]
+    }
+;
+
+OBJECT
+    : ID ':' EXPRESSION
+    {
+        $$ = new TypeValue($1, $3, @1.first_line, @1.first_column);
+    }
+;
+
+
+///================== TYPES
+
+TYPE_DECLARATION
+    : 'RESERV_TYPE' ID '=' '{' PRIMITIVE_DATAS '}' ';' 
+    {
+        $$ = new Type($2, 9, $5, @1.first_line, @1.first_column);
+    }
+;
+
+
+PRIMITIVE_DATAS
+    : PRIMITIVE_DATAS ',' PRIMITIVE_DATA
+    {
+        $1.push($3)
+        $$ = $1;
+    }
+    | PRIMITIVE_DATA
+    {
+        $$ = [$1];
+    }
+;
+
+PRIMITIVE_DATA
+    : ID ':' TYPE_TIPO
+    {
+        $$ = new PrimType($1, $3, @1.first_line, @1.first_column)
+    }
+;
+
+TYPE_TIPO
+    : 'RESERV_NUMBER'
+    { 
+        $$ = $1;
+    }
+    | 'RESERV_STRING'
     {
         $$ = $1;
     }
-    |
-    'RESERV_FUNCTION' ID '(' PARAMETROS ')' SENTENCIA_FUNCION
-    {
+    | 'RESERV_BOOLEAN'
+    { 
+        $$ = $1;
+    }
+    | ID
+    { 
         $$ = $1;
     }
 ;
 
-SENTENCIA_FUNCION: 
-    '{' FUNCIONHIJA '}'
+///================ FUNCIONES
+
+FUNCTIONS
+    : 
+    'RESERV_FUNCTION' ID '(' PATAMETERS ')' SENTENCIA
+    {
+        $$ = new Function($2, $6, $4, @1.first_line, @1.first_column);
+    }
+    |
+    'RESERV_FUNCTION' ID '(' ')' SENTENCIA
+    {
+        $$ = new Function($2, $5, [], @1.first_line, @1.first_column);
+    }
+;
+
+
+
+
+
+FUNCTION_SENTENCE: 
+    '{' CHILDFUNCTION '}'
     {
         $$ = $1;
     }
@@ -798,27 +941,27 @@ SENTENCIA_FUNCION:
     }
 ;
 
-FUNCIONHIJA: 
-    FUNCION_HIJA OTRA_INSTRUCCION
+CHILDFUNCTION: 
+    CHILD_FUNCTION NEW_INSTRUCTION
     {
         $$ = $1;
     }
 ;
 
-FUNCION_HIJA: 
-    'RESERV_FUNCTION' ID '(' ')' SENTENCIA_FUNCION
+CHILD_FUNCTION: 
+    'PR_FUNCTION' ID '(' ')' FUNCTION_SENTENCE
     {
         $$ = $1;
     }
     |
-    'RESERV_FUNCTION' ID '(' PARAMETROS ')' SENTENCIA_FUNCION
+    'PR_FUNCTION' ID '(' PARAMETROS ')' FUNCTION_SENTENCE
     {
         $$ = $1;
     }
 ;
 
-OTRA_INSTRUCCION: 
-    FUNCION_HIJA OTRA_INSTRUCCION
+NEW_INSTRUCTION: 
+    CHILD_FUNCTION NEW_INSTRUCTION
     {
         $$ = $1;
     }
@@ -828,45 +971,62 @@ OTRA_INSTRUCCION:
     }
 ;
 
-PARAMETROS: 
-    PARAMETROS ',' PARAMETRO
+
+
+
+
+
+
+
+
+
+
+
+
+
+PATAMETERS: 
+    PATAMETERS ',' PARAMS
     {
+        $1.push($3);
         $$ = $1;
     }
     |
-    PARAMETRO
+    PARAMS
     {
-        $$ = $1;
+        $$ = [$1];
     }
 ;
 
-PARAMETRO: 
+PARAMS: 
     ID ':' TIPO
     {
         $$ = $1;
     }
 ;
 
-CALL_FUNCTION:
+
+CALL_FUNCTION
+    :
     ID '(' ')' ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4)};
+        $$ = new Call($1, [], @1.first_line, @1.first_column);
     }
     |
-    ID '(' PARAMETROS_LLAMADA ')' ';'
+    ID '(' CALL_PARAMS ')' ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5)};
+        $$ = new Call($1, $3, @1.first_line, @1.first_column);
     }
 ;
 
-PARAMETROS_LLAMADA: 
-    PARAMETROS_LLAMADA ',' EXPRESSION
+CALL_PARAMS: 
+    CALL_PARAMS ',' EXPRESSION
     {
-        $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node)};
+        $1.push($3);
+        $$ = $1;
     }
     |
     EXPRESSION
     {
-        $$ = {node: newNode(yy, yystate, $1.node)};
+        $$ = [$1]
     }
 ;

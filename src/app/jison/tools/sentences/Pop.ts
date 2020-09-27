@@ -1,6 +1,6 @@
 import { Instruction } from '../abstract/instruction';
 import { ErrorController } from '../../../components/controller/error.controller';
-import { Type } from '../abstract/type';
+import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 
 
@@ -48,7 +48,7 @@ export class Pop extends Instruction {
                                 arregloTemporal.push(element)
                             }    
 
-                            ambit.setVariable(variable.id, arregloTemporal, variable.type)
+                            ambit.setVariable(variable.id, arregloTemporal, variable.type, false)
 
                             console.log(variable);
                             var a = ambit.getVariable(nombreArregloOriginal)
@@ -57,10 +57,7 @@ export class Pop extends Instruction {
                         } 
 
                         if (arregloElementos.length == 1) {
-                            ambit.setVariable(variable.id, arregloTemporal, variable.type)
-
-
-
+                            ambit.setVariable(variable.id, arregloTemporal, variable.type, false)
                             return arregloElementos.pop();    
                         }
                         
@@ -97,7 +94,7 @@ export class Pop extends Instruction {
 
 
 
-    public getType(type: Type): string {
+    public getType(type: TypeAll): string {
         switch (type) {
             case 0:
                 return "NUMBER"

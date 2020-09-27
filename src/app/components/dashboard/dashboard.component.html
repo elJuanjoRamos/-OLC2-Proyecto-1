@@ -126,8 +126,39 @@
         <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
       </div>
       <div class="tab-pane" id="tabla" role="tabpanel">
-        <p>I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it’s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
-      </div>
+      
+        <div class="container">
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Ambito</th>
+                <th scope="col">Retorno</th>
+                <th scope="col">variable</th>
+                <th scope="col">funcion</th>
+                <th scope="col">Fila</th>
+                <th scope="col">Columna</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tab of tabla;">
+                <td>{{tab.name}}</td>
+                <td>{{tab.type}}</td>
+                <td>{{tab.ambit}}</td>
+                <td>{{tab.returned}}</td>
+                <td>{{tab.variable}}</td>
+                <td>{{tab.funcion}}</td>
+                <td>{{tab.row}}</td>
+                <td>{{tab.column}}</td>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div> 
+        
+    </div>
       
     </div>
       </div>

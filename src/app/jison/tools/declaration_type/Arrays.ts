@@ -1,13 +1,13 @@
 import { Instruction } from '../abstract/instruction';
 import { ErrorController } from '../../../components/controller/error.controller';
-import { Type } from '../abstract/type';
+import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 import { ArrayParam } from '../model/ArrayParam';
 
 
 export class Arrays extends Instruction {
     public lenght: number = -1;
-    constructor(private id: string, private type: Type, private values: Array<ArrayParam>, row: number, column: number) {
+    constructor(private id: string, private type: TypeAll, private values: Array<ArrayParam>, row: number, column: number) {
         super(row, column);
     }
 
@@ -15,7 +15,7 @@ export class Arrays extends Instruction {
     public exec(ambit: Ambit) {
 
 
-        var newAmbit = new Ambit(ambit)
+        var newAmbit = new Ambit(ambit, ambit.getName())
 
         if (this.values != null) {
 
@@ -38,7 +38,7 @@ export class Arrays extends Instruction {
             }
 
             if (flag) {
-                newAmbit.save(this.id, this.values, this.getArrayType(this.type)); //GUARDO EL ARREGLO
+                newAmbit.save(this.id, this.values, this.getArrayType(this.type), false); //GUARDO EL ARREGLO
             }
 
 
@@ -64,7 +64,7 @@ export class Arrays extends Instruction {
                     return false;
             } else {
                 
-                ambit.save(name, temp.value, temp.type); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
+                ambit.save(name, temp.value, temp.type, false); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
                 return true;
             }
 
@@ -83,7 +83,7 @@ export class Arrays extends Instruction {
                 }
             }
 
-            ambit.save(name, arrayParamArray, val); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
+            ambit.save(name, arrayParamArray, val, false); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
             return true;
         }
 
@@ -104,7 +104,7 @@ export class Arrays extends Instruction {
     }
 
 
-    public getArrayType(type: Type): number {
+    public getArrayType(type: TypeAll): number {
         switch (type) {
             case 0:
                 return 5
@@ -117,7 +117,7 @@ export class Arrays extends Instruction {
         }
     }
 
-    public getType(type: Type): string {
+    public getType(type: TypeAll): string {
         switch (type) {
             case 0:
                 return "NUMBER"

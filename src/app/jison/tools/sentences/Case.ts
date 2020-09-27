@@ -13,7 +13,12 @@ export class Case extends Instruction {
 
     public exec(ambit: Ambit){
 
-        var newAmbit = new Ambit(ambit);
+        var ambitName = "Global";
+        if (ambit != null) {
+            ambitName = ambit.getName();
+        }
+
+        var newAmbit = new Ambit(ambit, ambitName);
         const element = this.code.exec(newAmbit);
         
         if(element != null || element != undefined){

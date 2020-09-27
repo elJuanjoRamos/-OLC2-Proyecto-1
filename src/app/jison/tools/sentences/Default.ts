@@ -1,6 +1,4 @@
 import { Instruction } from '../abstract/instruction';
-import {Type} from '../abstract/type'
-import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
 import { Sentence } from './Sentence';
 
@@ -13,7 +11,11 @@ export class Default extends Instruction {
     }
 
     public exec(ambit : Ambit) {
-        var newAmbit = new Ambit(ambit);
+        var ambitName = "Global";
+        if (ambit != null) {
+            ambitName = ambit.getName();
+        }
+        var newAmbit = new Ambit(ambit, ambitName);
         const element = this.code.exec(newAmbit);
 
         if(element != null || element != undefined){

@@ -18,8 +18,11 @@ export class FOROF extends Instruction {
 
     public exec(ambit : Ambit){
        
-       
-        const newAmbit = new Ambit(ambit);
+        var ambitName = "Global_ForOf";
+        if (ambit != null) {
+            ambitName = ambit.getName()+"_ForOf";
+        }
+        const newAmbit = new Ambit(ambit, ambitName);
         this.declaration.exec(newAmbit);
        
        var arreglo = ambit.getVariable(this.array)
@@ -36,11 +39,11 @@ export class FOROF extends Instruction {
                         
                         //SI LA VARIABLE NO EXISTE EN EL AMBITO DEL FOR, LO CREO
                         if (newAmbit.getVariable(this.declaration.getId()) == null) {
-                            newAmbit.save(this.declaration.getId(), index, 0)                            
+                            newAmbit.save(this.declaration.getId(), index, 0, false)                            
                         //SI YA EXISTE, SE EDITA
                         } else {
 
-                            newAmbit.setVariable(this.declaration.getId(), arregloTemporal[index].value, 0)                            
+                            newAmbit.setVariable(this.declaration.getId(), arregloTemporal[index].value, 0, false)                            
                         }
                         
                         

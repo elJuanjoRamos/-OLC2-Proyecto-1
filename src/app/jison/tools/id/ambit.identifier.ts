@@ -1,5 +1,5 @@
 
-import { Type } from '../abstract/type';
+import { TypeAll } from '../abstract/enums';
 import { Identifier } from './Identifier';
 import { Function } from '../sentences/Function';
 
@@ -7,14 +7,17 @@ import { Function } from '../sentences/Function';
 export class Ambit {
     private variables: Map<string, Identifier>;
     public functions: Map<string, Function>;
-
+    private types: Map<string, Identifier>;
+    private name: string = "";
    /**
      * CONSTRUCTOR
      * @param anterior 
      */
-    constructor(public anterior : Ambit | null){
+    constructor(public anterior : Ambit | null, public n){
         this.variables = new Map();
         this.functions = new Map();
+        this.types = new Map();
+        this.name = n;
     }
 
 
@@ -29,27 +32,27 @@ export class Ambit {
         return null;
     }
 
-    public setVariable(id, valor: any, type: Type){
+    public setVariable(id, valor: any, type: TypeAll, esconstante:boolean){
         let amb : Ambit | null = this;
         while(amb != null){
             if(amb.variables.has(id)){
-                amb.variables.set(id, new Identifier(valor, id, type))
+                amb.variables.set(id, new Identifier(valor, id, type, esconstante))
                 return;
             }
             amb = amb.anterior;
         }
     }
 
-    public save(id, valor: any, type: Type){
+    public save(id, valor: any, type: TypeAll, esconstante:boolean){
         let amb : Ambit | null = this;
         while(amb != null){
             if(amb.variables.has(id)){
-                amb.variables.set(id, new Identifier(valor, id, type));
+                amb.variables.set(id, new Identifier(valor, id, type, esconstante));
                 return;
             }
             amb = amb.anterior;
         }
-        this.variables.set(id, new Identifier(valor, id, type));
+        this.variables.set(id, new Identifier(valor, id, type, esconstante));
     }
 
 
@@ -74,11 +77,39 @@ export class Ambit {
         }
         return amb;
     }
+    public getName(): string {
+        return this.name;
+    }
 
     public saveFunc(id, funcion){
         this.functions.set(id, funcion);
     }
 
+
+
+
+    public saveTypes(id, valor, type: TypeAll){
+        let amb : Ambit | null = this;
+        while(amb != null){
+            if(amb.types.has(id)){
+                amb.types.set(id, new Identifier(valor, id, type, false));
+                return;
+            }
+            amb = amb.anterior;
+        }
+        this.types.set(id, new Identifier(valor, id, type, false));
+    }
+
+    public getTypes(id: string) : Identifier | undefined | null{
+        let amb : Ambit | null = this;
+        while(amb != null){
+            if(amb.types.has(id)){
+                return amb.types.get(id);
+            }
+            amb = amb.anterior;
+        }
+        return null;
+    }
 
 
 

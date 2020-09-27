@@ -7,7 +7,7 @@ export class Continue extends Instruction {
     ){
         super(row, col);
     }
-    public execute(ambit : Ambit) {
+    public exec(ambit : Ambit) {
         return {row : this.row, col: this.col, type : 'continue'};
     }
 }

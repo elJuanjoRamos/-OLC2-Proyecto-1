@@ -1,7 +1,7 @@
 import { Instruction } from '../abstract/instruction';
 import { Expression } from '../abstract/expression';
 import { ErrorController } from '../../../components/controller/error.controller';
-import { Type } from '../abstract/type';
+import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 import { ArrayParam } from '../model/ArrayParam';
 
@@ -44,11 +44,11 @@ export class Pushs extends Instruction {
                     arregloElementos.push(new ArrayParam(this.value, false)) //PUSHEO EL NUEVO ELEMENTO
             
                     // LE SETEO EL NUEVO ARREGLO DE ELEMENTOS AL ARREGLO QUE YA TENIA
-                    ambit.setVariable(variable.id, arregloElementos, variable.type)
+                    ambit.setVariable(variable.id, arregloElementos, variable.type, false)
             
              
                     // GUARDO LA POSICION +1 DEL ARREGLO
-                    ambit.save(this.id + '[' + (arregloElementos.length-1) + ']' , temp.value, temp.type); 
+                    ambit.save(this.id + '[' + (arregloElementos.length-1) + ']' , temp.value, temp.type, false); 
                 
             
                 } else { // SI NO SON IGUALES MARCA ERROR SEMANTICO
@@ -81,7 +81,7 @@ export class Pushs extends Instruction {
 
 
 
-    public getType(type: Type): string {
+    public getType(type: TypeAll): string {
         switch (type) {
             case 0:
                 return "NUMBER"

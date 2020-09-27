@@ -1,6 +1,6 @@
 import {Instruction} from '../abstract/instruction'
 import {Expression} from '../abstract/expression'
-import {Type} from '../abstract/type'
+import { TypeAll } from '../abstract/enums'
 import { Ambit } from '../id/ambit.identifier';
 import { ErrorController } from 'src/app/components/controller/error.controller';
 
@@ -19,13 +19,16 @@ export class While extends Instruction{
     }
 
     public exec(ambit : Ambit) {
+        var ambitName = "Global_While";
+        if (ambit != null) {
+            ambitName = ambit.getName()+"_While";
+        }
 
-
-        var newAmbit = new Ambit(ambit);
+        var newAmbit = new Ambit(ambit, ambit);
 
         let condicion = this.condicion.exec(newAmbit);
    
-        if(condicion.type != Type.BOOLEAN){
+        if(condicion.type != TypeAll.BOOLEAN){
             ErrorController.getInstance().add("La condicion del While no es booleana", "Semántico", this.row, this.column);
         }
 
@@ -43,7 +46,7 @@ export class While extends Instruction{
                         continue;
                 }
                 condicion = this.condicion.exec(newAmbit);
-                if(condicion.type != Type.BOOLEAN){
+                if(condicion.type != TypeAll.BOOLEAN){
                     ErrorController.getInstance().add("La condicion del While no es booleana", "Semántico", this.row, this.column);
                 }
     

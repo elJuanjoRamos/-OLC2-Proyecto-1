@@ -9,7 +9,11 @@ export class Return extends Instruction {
     }
 
     public exec(ambit : Ambit) {
-        const val = this.value.exec(ambit);
+        var val = null;
+
+        if (this.value != null) {
+            val = this.value.exec(ambit);            
+        }
 
         return {value: val, row : this.row, col: this.col, type : 'return'};
     }

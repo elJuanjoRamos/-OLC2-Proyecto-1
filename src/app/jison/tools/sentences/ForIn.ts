@@ -20,8 +20,12 @@ export class FORIN extends Instruction {
 
     public exec(ambit : Ambit){
        
+        var ambitName = "Global_ForIn";
+        if (ambit != null) {
+            ambitName = ambit.getName()+"_ForIn";
+        }
        
-        const newAmbit = new Ambit(ambit);
+        const newAmbit = new Ambit(ambit, ambitName);
         this.declaration.exec(newAmbit);
        
        var arreglo = ambit.getVariable(this.array)
@@ -38,10 +42,10 @@ export class FORIN extends Instruction {
                         
                         //SI LA VARIABLE NO EXISTE EN EL AMBITO DEL FOR, LO CREO
                         if (newAmbit.getVariable(this.declaration.getId()) == null) {
-                            newAmbit.save(this.declaration.getId(), index, 0)                            
+                            newAmbit.save(this.declaration.getId(), index, 0, false)                            
                         //SI YA EXISTE, SE EDITA
                         } else {
-                            newAmbit.setVariable(this.declaration.getId(), index, 0)                            
+                            newAmbit.setVariable(this.declaration.getId(), index, 0, false)                            
                         }
                         
                         

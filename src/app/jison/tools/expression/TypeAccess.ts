@@ -1,16 +1,10 @@
 
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
-import { Returned } from '../abstract/type';
+import { Returned } from '../abstract/enums';
 
 export class TypeAccess extends Expression {
 
-    /**
-     * CONSTRUCTOR
-     * @param id 
-     * @param row 
-     * @param col 
-     */
     constructor( public id: string, public id2: string,  public row : number, public col: number){
         super(row, col);
     }

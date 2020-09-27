@@ -1,5 +1,5 @@
 import { Expression } from '../abstract/expression';
-import { Returned, Type, OpRelational } from '../abstract/type';
+import { Returned, TypeAll, OpRelational } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 
 
@@ -10,39 +10,39 @@ export class Relational extends Expression {
         super(row, col);
     }
 
-    public exec(environment: Ambit): Returned {
+    public exec(ambit: Ambit): Returned {
 
-        const leftValue = this.left.exec(environment);
-        const rightValue = this.right.exec(environment);
+        const leftValue = this.left.exec(ambit);
+        const rightValue = this.right.exec(ambit);
         switch (this.type) {
             case OpRelational.EQUALS:
 
-                return { value: (leftValue.value == rightValue.value), type: Type.BOOLEAN };
+                return { value: (leftValue.value == rightValue.value), type: TypeAll.BOOLEAN };
 
                 break;
             case OpRelational.DISCTINCT:
-                return { value: (leftValue.value != rightValue.value), type: Type.BOOLEAN };
+                return { value: (leftValue.value != rightValue.value), type: TypeAll.BOOLEAN };
                 break;
             case OpRelational.LESS:
 
-                return { value: (leftValue.value < rightValue.value), type: Type.BOOLEAN };
+                return { value: (leftValue.value < rightValue.value), type: TypeAll.BOOLEAN };
                 break;
             case OpRelational.LESS_EQUALS:
-                return { value: (leftValue.value <= rightValue.value), type: Type.BOOLEAN };
+                return { value: (leftValue.value <= rightValue.value), type: TypeAll.BOOLEAN };
 
                 break;
             case OpRelational.HIGHER:
-                return { value: (leftValue.value > rightValue.value), type: Type.BOOLEAN };
+                return { value: (leftValue.value > rightValue.value), type: TypeAll.BOOLEAN };
 
                 break;
             case OpRelational.HIGHER_EQUALS:
-                return { value: (leftValue.value >= rightValue.value), type: Type.BOOLEAN };
+                return { value: (leftValue.value >= rightValue.value), type: TypeAll.BOOLEAN };
 
                 break;
             default:
                 break;
         }
 
-        return { value: false, type: Type.BOOLEAN }
+        return { value: false, type: TypeAll.BOOLEAN }
     }
 }

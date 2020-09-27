@@ -1,5 +1,5 @@
 import { Instruction } from '../abstract/instruction';
-import {Type} from '../abstract/type'
+import { TypeAll } from '../abstract/enums'
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
 import { ErrorController } from '../../../components/controller/error.controller';
@@ -13,14 +13,17 @@ export class IF extends Instruction {
     }
 
     public exec(ambit : Ambit) {
-        
+        var ambitName = "Global_If";
+        if (ambit != null) {
+            ambitName = ambit.getName()+"_If";
+        }
 
 
 
-        var ifAmbit = new Ambit(ambit);
+        var ifAmbit = new Ambit(ambit, ambitName);
 
         const condition = this.condition.exec(ifAmbit);
-        if(condition.type != Type.BOOLEAN){
+        if(condition.type != TypeAll.BOOLEAN){
             ErrorController.getInstance().add("La condicion no es booleana", "Semantico" ,this.row, this.column);
         }
 
@@ -31,7 +34,7 @@ export class IF extends Instruction {
         }
         else{
             
-            var elseAmbit = new Ambit(ambit);
+            var elseAmbit = new Ambit(ambit, ambitName);
             return this.elseDeclaracion?.exec(elseAmbit);
         }
     }

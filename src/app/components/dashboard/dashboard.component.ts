@@ -5,7 +5,8 @@ import * as astGraph from '../../jison/tools/ast/ast';
 import { OutputController } from '../controller/output.controller';
 import { Ambit } from '../../jison/tools/id/ambit.identifier';
 import { ErrorController } from '../controller/error.controller';
-
+import { TablaSimbolosController } from '../controller/tablasimbolo.conroller';
+import { Function } from '../../jison/tools/sentences/Function'
 
 @Component({
   selector: 'app-dashboard',
@@ -13,66 +14,58 @@ import { ErrorController } from '../controller/error.controller';
 })
 export class DashboardComponent implements OnInit {
 
-  data:any = [];
-  
+  data: any = [];
+  tabla: any = [];
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  strEntrada:string;
-  strSalida:string;
+  strEntrada: string;
+  strSalida: string;
   textoSalida: string;
+
   analize() {
     if (document.getElementById("grafo")) {
-        document.getElementById("grafo").remove();
+      document.getElementById("grafo").remove();
     }
     try {
       /**
        * LIMPIAR VARIABLES
        */
       OutputController.getinstance().clear();
+      TablaSimbolosController.getInstance().clear();
       console.clear()
-      const env = new Ambit(null);
-      //let analisisAST = analisis.parse(this.strEntrada);
-      let analisisGraico = parser.parse(this.strEntrada)
+      const env = new Ambit(null, "Global");
+      let analisisAST = analisis.parse(this.strEntrada);
+      //let analisisGraico = parser.parse(this.strEntrada)
       setTimeout(() => {
       }, 1000);
 
 
-      
-      astGraph.generarArbol([analisisGraico.node]);
-      
-     /* var arreglo1: string[] = []
 
-      var arreglo1: string[]; 
+      //astGraph.generarArbol([analisisGraico.node]);
 
-      var arreglo: string[] = new Array(4);
-
-      
-      var arreglo1: Array<string> = []
-      var arreglo1: Array<string>;
-      var arreglo1: Array<string> = new Array(4);*/
-
-
-
-
-
-
-      /**
-       * EJECUTAR EJECUCION
-       */
-     /* for(const instr of analisisAST){
+      for (const element of analisisAST) {
         try {
-            const actual = instr.exec(env);
-            if(actual != null || actual != undefined){
-                //errores.push(new Error_(actual.line, actual.column, 'Semantico', actual.type + ' fuera de un ciclo'));
-                console.error("ERROR SEMANTICO")
-            }
+          if (element instanceof Function)
+            element.exec(env);
         } catch (error) {
-            console.error(error)
+          console.log(error)
         }
-      }*/
+      }
+     
+      for (const element of analisisAST) {
+        try {
+          const actual = element.exec(env);
+          if (actual != null || actual != undefined) {
+            //errores.push(new Error_(actual.line, actual.column, 'Semantico', actual.type + ' fuera de un ciclo'));
+            console.error("ERROR SEMANTICO")
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      }
     } catch (error) {
       /**
        * INGRESAR ERRORES PARA REPORTE
@@ -81,7 +74,8 @@ export class DashboardComponent implements OnInit {
       //ErrorControlador.getInstancia().agregarError(error.error, "Semántico", error.fila, error.columna);
     }
     this.strSalida = OutputController.getinstance().getOut;
-    this.textoSalida = OutputController.getinstance().getOut;
+    this.tabla = TablaSimbolosController.getInstance().getArray()
+    console.log(this.tabla)
     console.log(OutputController.getinstance().getOut)
     // IMPRIMIR ERRORES
     ErrorController.getInstance().print();

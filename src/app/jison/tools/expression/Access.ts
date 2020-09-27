@@ -1,6 +1,6 @@
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
-import { Returned } from '../abstract/type';
+import { Returned } from '../abstract/enums';
 import { ErrorController } from '../../../components/controller/error.controller';
 
 

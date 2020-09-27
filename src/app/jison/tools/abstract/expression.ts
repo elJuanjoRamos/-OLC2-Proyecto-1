@@ -1,5 +1,5 @@
 
-import { Returned } from '../abstract/type';
+import { Returned } from './enums';
 import { Ambit } from '../id/ambit.identifier';
 
  export abstract class Expression {

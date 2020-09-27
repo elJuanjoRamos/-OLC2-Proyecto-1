@@ -10,10 +10,8 @@
     "src/app/jison/tools/abstract/expression.ts",
     "src/app/jison/tools/abstract/instruction.ts",
     "src/app/jison/tools/expression/Access.ts",
-    "src/app/jison/tools/expression/TypeAccess.ts",
     "src/app/jison/tools/expression/Arithmetic.ts",
     "src/app/jison/tools/expression/Literal.ts",
-    "src/app/jison/tools/expression/ObjectLiteral.ts",
     "src/app/jison/tools/expression/Logical.ts",
     "src/app/jison/tools/expression/Relational.ts",
     "src/app/jison/tools/sentences/Console.ts",
@@ -33,16 +31,21 @@
     "src/app/jison/tools/sentences/Push.ts",
     "src/app/jison/tools/sentences/Pop.ts",
     "src/app/jison/tools/sentences/Continue.ts",
-    "src/app/jison/tools/sentences/Function.ts",
-    "src/app/jison/tools/sentences/Call.ts",
     "src/app/jison/tools/sentences/Return.ts",
-    "src/app/jison/tools/sentences/TypeN.ts",
-    
     "src/app/jison/tools/declaration_type/Arrays.ts",
     "src/app/jison/tools/declaration_type/ArrayObject.ts",
     "src/app/jison/tools/model/ArrayParam.ts",
     
-
+    "src/app/jison/tools/sentences/Type.ts",    
+    "src/app/jison/tools/sentences/TypeNoType.ts",
+    "src/app/jison/tools/sentences/PrimType.ts",
+    "src/app/jison/tools/sentences/TypeValue.ts",
+    "src/app/jison/tools/expression/ObjectLiteral.ts",
+    "src/app/jison/tools/expression/TypeAccess.ts",
+    "src/app/jison/tools/sentences/Function.ts",
+    "src/app/jison/tools/sentences/Call.ts",
+    "src/app/jison/tools/sentences/Constant.ts",
+    
   ],
   "include": [
     "src/**/*.d.ts"

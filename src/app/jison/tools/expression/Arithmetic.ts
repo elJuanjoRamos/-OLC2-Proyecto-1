@@ -1,5 +1,5 @@
 import { Expression } from '../abstract/expression';
-import { Type, OpArithmetic, Returned } from '../abstract/type';
+import { TypeAll, OpArithmetic, Returned } from '../abstract/enums';
 
 
 
@@ -31,9 +31,9 @@ export class Arithmetic extends Expression {
                     */
                 if (leftValue.type == 0) {
                     if (rightValue.type == 0) {
-                        result = { value: (leftValue.value + rightValue.value), type: Type.NUMBER };
+                        result = { value: (leftValue.value + rightValue.value), type: TypeAll.NUMBER };
                     } else if (rightValue.type == 1) {
-                        result = { value: (leftValue.value.toString() + rightValue.value.toString()), type: Type.STRING };
+                        result = { value: (leftValue.value.toString() + rightValue.value.toString()), type: TypeAll.STRING };
                     } else {
                         throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type) + " con " + this.getType(rightValue.type), row: this.row, column: this.column };
                     }
@@ -43,7 +43,7 @@ export class Arithmetic extends Expression {
                      * STRING + OTHER : STRING
                      */
                 else if (leftValue.type == 1) {
-                    result = { value: (leftValue.value.toString() + rightValue.value.toString()), type: Type.STRING };
+                    result = { value: (leftValue.value.toString() + rightValue.value.toString()), type: TypeAll.STRING };
                 }
                 /**
                     * SI EL IZQUIERDO ES BOOLEAN
@@ -54,7 +54,7 @@ export class Arithmetic extends Expression {
 
                     switch (rightValue.type) {
                         case 1:
-                            result = { value: (leftValue.value.toString() + rightValue.value.toString()), type: Type.STRING };
+                            result = { value: (leftValue.value.toString() + rightValue.value.toString()), type: TypeAll.STRING };
                             break;
                         default:
                             throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type) + " con " + this.getType(rightValue.type), row: this.row, column: this.column };
@@ -69,7 +69,7 @@ export class Arithmetic extends Expression {
 
                 if (leftValue.type == 0) {
                     if (rightValue.type == 0) {
-                        result = { value: (leftValue.value - rightValue.value), type: Type.NUMBER };
+                        result = { value: (leftValue.value - rightValue.value), type: TypeAll.NUMBER };
                     } else {
                         throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type) + " con " + this.getType(rightValue.type), row: this.row, column: this.column };
                     }
@@ -80,7 +80,7 @@ export class Arithmetic extends Expression {
             case OpArithmetic.MULTIPLICATION:
                 if (leftValue.type == 0) {
                     if (rightValue.type == 0) {
-                        result = { value: (leftValue.value * rightValue.value), type: Type.NUMBER };
+                        result = { value: (leftValue.value * rightValue.value), type: TypeAll.NUMBER };
                     } else {
                         throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type) + " con " + this.getType(rightValue.type), row: this.row, column: this.column };
                     }
@@ -96,7 +96,7 @@ export class Arithmetic extends Expression {
                  */
                 if (leftValue.type == 0) {
                     if (rightValue.type == 0) {
-                        result = { value: (leftValue.value / rightValue.value), type: Type.NUMBER };
+                        result = { value: (leftValue.value / rightValue.value), type: TypeAll.NUMBER };
                     } else {
                         throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type) + " con " + this.getType(rightValue.type), row: this.row, column: this.column };
                     }
@@ -112,7 +112,7 @@ export class Arithmetic extends Expression {
                 */
                 if (leftValue.type == 0) {
                     if (rightValue.type == 0) {
-                        result = { value: Math.pow(leftValue.value, rightValue.value), type: Type.NUMBER };
+                        result = { value: Math.pow(leftValue.value, rightValue.value), type: TypeAll.NUMBER };
                     } else {
                         throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type) + " con " + this.getType(rightValue.type), row: this.row, column: this.column };
                     }
@@ -128,7 +128,7 @@ export class Arithmetic extends Expression {
                 */
                 if (leftValue.type == 0) {
                     if (rightValue.type == 0) {
-                        result = { value: (leftValue.value % rightValue.value), type: Type.NUMBER };
+                        result = { value: (leftValue.value % rightValue.value), type: TypeAll.NUMBER };
                     } else {
                         throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type) + " con " + this.getType(rightValue.type), row: this.row, column: this.column };
                     }
@@ -144,7 +144,7 @@ export class Arithmetic extends Expression {
                  */
                 if (leftValue.type == 0) {
                     if (rightValue.type == 0) {
-                        result = { value: (leftValue.value + 1), type: Type.NUMBER };
+                        result = { value: (leftValue.value + 1), type: TypeAll.NUMBER };
                     } else {
                         throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type), row: this.row, column: this.column };
                     }
@@ -161,7 +161,7 @@ export class Arithmetic extends Expression {
                  */
                 if (leftValue.type == 0) {
                     if (rightValue.type == 0) {
-                        result = { value: (leftValue.value - 1), type: Type.NUMBER };
+                        result = { value: (leftValue.value - 1), type: TypeAll.NUMBER };
                     } else {
                         throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type), row: this.row, column: this.column };
                     }
@@ -178,11 +178,11 @@ export class Arithmetic extends Expression {
                  * - STRING: NAN
                  */
                 if (leftValue.type == 0) {
-                    result = { value: (-leftValue.value), type: Type.NUMBER };
+                    result = { value: (-leftValue.value), type: TypeAll.NUMBER };
                 } else if (leftValue.type == 1) {
-                    result = { value: (-leftValue.value), type: Type.NUMBER };
+                    result = { value: (-leftValue.value), type: TypeAll.NUMBER };
                 } else if (leftValue.type == 2) {
-                    result = { value: (-leftValue.value), type: Type.NUMBER };
+                    result = { value: (-leftValue.value), type: TypeAll.NUMBER };
                 } else {
                     throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(leftValue.type), row: this.row, column: this.column };
                 }

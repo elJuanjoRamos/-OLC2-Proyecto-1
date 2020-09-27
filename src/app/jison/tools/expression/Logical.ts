@@ -1,5 +1,5 @@
 import { Expression } from '../abstract/expression';
-import { Returned, Type, OpLogical } from '../abstract/type';
+import { Returned, TypeAll, OpLogical } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier'
 
 
@@ -17,20 +17,20 @@ export class Logical extends Expression {
             case OpLogical.AND:
             
                 var res = ((this.left.exec(ambit)).value && (this.right.exec(ambit)).value )
-                return { value: res, type: Type.BOOLEAN };
+                return { value: res, type: TypeAll.BOOLEAN };
 
                 break;
             case OpLogical.OR:
 
 
                 var res = ((this.left.exec(ambit)).value || (this.right.exec(ambit)).value )
-                return { value: res, type: Type.BOOLEAN };
+                return { value: res, type: TypeAll.BOOLEAN };
 
                 break;
             case OpLogical.NOT:
                 
                 var res:any = !((this.left.exec(ambit)).value)
-                return { value: res, type: Type.BOOLEAN };
+                return { value: res, type: TypeAll.BOOLEAN };
 
                 break;
 
@@ -39,6 +39,6 @@ export class Logical extends Expression {
         }
 
 
-        return { value: false, type: Type.BOOLEAN }
+        return { value: false, type: TypeAll.BOOLEAN }
     }
 }

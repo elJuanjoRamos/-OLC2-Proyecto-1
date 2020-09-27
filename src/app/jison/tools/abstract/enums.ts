@@ -1,4 +1,4 @@
-export enum Type {
+export enum TypeAll {
     NUMBER=0,
     STRING=1,
     BOOLEAN= 2,
@@ -49,6 +49,6 @@ export enum Transfer {
 export type Returned ={
     value : any,
     valor?: any,
-    type : Type
+    type : TypeAll
 }
 

@@ -7,11 +7,18 @@ export class Sentence extends Instruction{
         super(row, column);
     }
 
-    public exec(env : Ambit) {
-        const newEnv = new Ambit(env);
+    public exec(amb : Ambit) {
+
+        var ambitName = "Global";
+        if (amb != null) {
+            ambitName = amb.getName();
+        }
+
+        const newAmbit = new Ambit(amb, ambitName);
+        
         for(const instr of this.code){
             try {
-                const element = instr.exec(newEnv);
+                const element = instr.exec(newAmbit);
                 if(element != undefined || element != null)
                     return element;                
             } catch (error) {

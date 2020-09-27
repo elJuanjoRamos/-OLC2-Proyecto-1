@@ -1,41 +1,34 @@
 import { Instruction } from '../abstract/instruction';
 import { Expression } from '../abstract/expression';
 import { ErrorController } from '../../../components/controller/error.controller';
-import { TablaSimbolosController } from '../../../components/controller/tablasimbolo.conroller';
 import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 
 
 
-export class Declaration extends Instruction{
+export class Constant extends Instruction{
 
     constructor(private id: string, private type:any, private value: Expression, row: number, column: number){
         super(row, column);
     }
-
-
     public exec(ambit: Ambit) {
         try {
             const val = this.value.exec(ambit);
             
             if(this.type == undefined) {
-                ambit.save(this.id, val.value, 8, false);
-
-                TablaSimbolosController.getInstance().add(this.id, this.getType(this.type), ambit.getName(), 0, true, false, this.row, this.column);
-
+                ambit.save(this.id, val.value, val.type, true);
             } else {
                 if((this.type != val.type) && this.type != 7) {
                     throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(this.type), row: this.row, column : this.column};
                 } else {
-                    ambit.save(this.id, val.value, val.type, false);
-                    TablaSimbolosController.getInstance().add(this.id, this.getType(this.type), ambit.getName(), 0, true, false, this.row, this.column);
-
+                    ambit.save(this.id, val.value, val.type, true);
                 }
             }
         } catch (error) {
            
             ErrorController.getInstance().add(error.error, "Semántico", error.row, error.column);
         }
+        
     }
 
     public getId(): string{ 
@@ -51,10 +44,10 @@ export class Declaration extends Instruction{
                 return "STRING"
             case 2:
                 return "BOOLEAN"
-            case 7:
+                case 7:
                     return "ANY"
             }
-        return "ANY"
+        return ""
     }
 
 }

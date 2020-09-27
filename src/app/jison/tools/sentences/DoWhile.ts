@@ -1,5 +1,5 @@
 import { Instruction } from '../abstract/instruction';
-import {Type} from '../abstract/type'
+import { TypeAll } from '../abstract/enums'
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
 import { ErrorController } from '../../../components/controller/error.controller';
@@ -18,10 +18,14 @@ export class DoWhile extends Instruction{
     }
 
     public exec(ambit : Ambit) {
-        var newAmbit = new Ambit(ambit);
+        var ambitName = "Global_DoWhile";
+        if (ambit != null) {
+            ambitName = ambit.getName()+"_DoWhile";
+        }
+        var newAmbit = new Ambit(ambit, ambitName);
         let condicion = this.condicion.exec(newAmbit);
         
-        if(condicion.type != Type.BOOLEAN){
+        if(condicion.type != TypeAll.BOOLEAN){
             ErrorController.getInstance().add("La condicion del Do While no es booleana", "Semántico", this.column, this.row);
 
         }
@@ -34,7 +38,7 @@ export class DoWhile extends Instruction{
                     continue;
             }
             condicion = this.condicion.exec(newAmbit);
-            if(condicion.type != Type.BOOLEAN){
+            if(condicion.type != TypeAll.BOOLEAN){
                 ErrorController.getInstance().add("La condicion del Do While no es booleana", "Semántico", this.column, this.row);
             }
         } while(condicion.value == true);

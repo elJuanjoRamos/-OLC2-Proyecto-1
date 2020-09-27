@@ -1,14 +1,14 @@
 import { Instruction } from '../abstract/instruction';
 import { Expression } from '../abstract/expression';
 import { ErrorController } from '../../../components/controller/error.controller';
-import { Type } from '../abstract/type';
+import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 
 
 
 export class ArrayObject extends Instruction {
     public lenght: number = -1;
-    constructor(private id: string, private type: Type, private values: Array<Expression> , row: number, column: number) {
+    constructor(private id: string, private type: TypeAll, private values: Array<Expression> , row: number, column: number) {
         super(row, column);
       
     }
@@ -16,7 +16,7 @@ export class ArrayObject extends Instruction {
 
     public exec(ambit: Ambit) {
 
-        var newAmbit = new Ambit(ambit);
+        var newAmbit = new Ambit(ambit, ambit.getName());
         if (this.values != null) {
             
 
@@ -25,12 +25,12 @@ export class ArrayObject extends Instruction {
                 
                 if (data.type == 0) { // significa que en el constructor vino un numero, ese numero va a ser el lenght del arreglo
                     this.lenght = data.value
-                    newAmbit.save(this.id, null, this.getArrayType(this.type)); //GUARDO EL ARREGLO
+                    newAmbit.save(this.id, null, this.getArrayType(this.type), false); //GUARDO EL ARREGLO
                 }  
             }
 
             else {
-                newAmbit.save(this.id, this.values, this.getArrayType(this.type)); //GUARDO EL ARREGLO
+                newAmbit.save(this.id, this.values, this.getArrayType(this.type), false); //GUARDO EL ARREGLO
                 this.lenght = this.values.length;
                 var flag = true;
 
@@ -54,13 +54,13 @@ export class ArrayObject extends Instruction {
                     for (let index = 0; index < this.values.length; index++) { //ITERO SOBRE LOS ELEMENTOS
                         const element = this.values[index];
                         var temp = element.exec(newAmbit) //OBTENGO EL ELEMENTO
-                        newAmbit.save(this.id + '[' + index + ']', temp.value, temp.type); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
+                        newAmbit.save(this.id + '[' + index + ']', temp.value, temp.type, false); // GUARDO CADA POSICION DEL ARREGLO array[0], array[1], ETC
     
                     }
                 }
             }
         } else {
-            newAmbit.save(this.id, null, this.getArrayType(this.type));
+            newAmbit.save(this.id, null, this.getArrayType(this.type), false);
         }
 
     }
@@ -75,7 +75,7 @@ export class ArrayObject extends Instruction {
     }
 
 
-    public getArrayType(type: Type): number {
+    public getArrayType(type: TypeAll): number {
         switch (type) {
             case 0:
                 return 5
@@ -88,7 +88,7 @@ export class ArrayObject extends Instruction {
         }
     }
 
-    public getType(type: Type): string {
+    public getType(type: TypeAll): string {
         switch (type) {
             case 0:
                 return "NUMBER"

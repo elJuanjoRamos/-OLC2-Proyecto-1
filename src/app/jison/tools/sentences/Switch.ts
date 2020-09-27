@@ -1,11 +1,8 @@
 import {Instruction} from '../abstract/instruction'
 import {Expression} from '../abstract/expression'
-import {Type} from '../abstract/type'
 import { Ambit } from '../id/ambit.identifier';
 import { Case } from "./Case"
 import { Sentence } from  './Sentence';
-import { flushMicrotasks } from '@angular/core/testing';
-import { abort } from 'process';
 export class Switch extends Instruction{
 
     /**
@@ -20,6 +17,10 @@ export class Switch extends Instruction{
 
     }
     public exec(ambit : Ambit){
+        var ambitName = "Global_Switch";
+        if (ambit != null) {
+            ambitName = ambit.getName()+"_Switch";
+        }
 
         var conSwitch = this.condicion.exec(ambit); //Condicion de switch
         var numeroCaso = -1;
@@ -31,7 +32,7 @@ export class Switch extends Instruction{
             if (condCase.value == conSwitch.value) { //Evaluo
                 numeroCaso = Number(k);
 
-                var newAmbit = new Ambit(ambit);
+                var newAmbit = new Ambit(ambit, ambitName);
                 const element = this.cases[k]; //AGARRO EL CASE COINCIDENTE
                 element.exec(newAmbit); // EJECUTO EL CASE
                 break;

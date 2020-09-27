@@ -3,7 +3,7 @@ import { ErrorController } from '../../../components/controller/error.controller
 import { Ambit } from '../id/ambit.identifier';
 import { Expression } from '../abstract/expression';
 
-export class TypeN extends Instruction{
+export class TypeNoType extends Instruction{
 
     constructor( public id, public id2, public value: Expression, public row, public col){
         super(row, col);

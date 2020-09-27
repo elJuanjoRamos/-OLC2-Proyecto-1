@@ -1,5 +1,5 @@
 import { Expression } from '../abstract/expression';
-import { Returned, Type } from '../abstract/type';
+import { Returned, TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 
 export class ObjectLiteral extends Expression {
@@ -30,6 +30,6 @@ export class ObjectLiteral extends Expression {
             valorSTR: strJSON
         }
 
-        return {value: data, type : Type.TYPE};
+        return {value: data, type : TypeAll.TYPE};
     }
 }

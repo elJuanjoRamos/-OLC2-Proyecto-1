@@ -1,6 +1,7 @@
 import { Instruction } from '../abstract/instruction';
 import { Ambit } from '../id/ambit.identifier';
 import { Sentence } from './Sentence';
+import { TablaSimbolosController } from '../../../components/controller/tablasimbolo.conroller';
 
 export class Function extends Instruction {
 
@@ -12,5 +13,7 @@ export class Function extends Instruction {
 
     public exec(ambit : Ambit) {
         ambit.saveFunc(this.idFunction, this);
+        TablaSimbolosController.getInstance().add(this.idFunction, "void", ambit.getName(), 0, false, true, this.row, this.column);
+
     }
 }

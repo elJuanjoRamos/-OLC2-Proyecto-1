@@ -1,5 +1,5 @@
 import { Instruction } from '../abstract/instruction';
-import {Type} from '../abstract/type'
+import { TypeAll } from '../abstract/enums'
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
 import { NoType } from './NoType';
@@ -17,20 +17,22 @@ export class FOR extends Instruction {
         private sentencias: Sentence,
         row: number,column: number){
         super(row, column);
-        console.log(sentencias)
-
+    
     }
 
     public exec(ambit : Ambit){
        
-
-       var newAmbit = new Ambit(ambit)
+        var ambitName = "Global_For";
+        if (ambit != null) {
+            ambitName = ambit.getName()+"_For";
+        }
+       var newAmbit = new Ambit(ambit, ambitName)
        
         this.declaration.exec(newAmbit)
         
         var forCondition = this.condition.exec(newAmbit);
 
-        if(forCondition.type != Type.BOOLEAN){
+        if(forCondition.type != TypeAll.BOOLEAN){
             ErrorController.getInstance().add("La condicion del For no es booleana", "Semántico", this.column, this.row);
         }
 
@@ -53,12 +55,12 @@ export class FOR extends Instruction {
                 const val = this.incrementDecrement.exec(newAmbit);
                
                 
-                newAmbit.setVariable(this.declaration.getId(), val.value, val.type)
+                newAmbit.setVariable(this.declaration.getId(), val.value, val.type, false)
                 
     
                 forCondition = this.condition.exec(newAmbit);
     
-                if(forCondition.type != Type.BOOLEAN){
+                if(forCondition.type != TypeAll.BOOLEAN){
                     ErrorController.getInstance().add("La condicion del For no es booleana", "Semántico", this.column, this.row);
                 }
             }
