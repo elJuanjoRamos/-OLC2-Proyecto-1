@@ -6,14 +6,19 @@ import { Sentence } from './Sentence';
 
 export class FOROF extends Instruction {
 
+    private declaration: Declaration;
+    private array: string;
+    private sentencias: Sentence;
+    public row: number;
+    public column: number;
 
-    constructor(
-        private declaration: Declaration,
-        private array: string,
-        private sentencias: Sentence,
-        row: number,column: number){
-        super(row, column);
-       
+    constructor( d: Declaration,a: string,s: Sentence,r: number,c: number){
+        super(r, c);
+       this.declaration = d;
+       this.array = a;
+       this.sentencias = s;
+       this.row = r;
+       this.column =c;
     }
 
     public exec(ambit : Ambit){

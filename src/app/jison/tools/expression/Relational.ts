@@ -6,37 +6,48 @@ import { Ambit } from '../id/ambit.identifier';
 
 export class Relational extends Expression {
 
-    constructor(private left: Expression, private right: Expression, private type: OpRelational, row: number, col: number) {
-        super(row, col);
+    private left:Expression;
+    private right:Expression;
+    private type: OpRelational;
+    public row:number;
+    public column: number;
+
+    constructor(l: Expression, r: Expression, t: OpRelational, ro: number, col: number) {
+        super(ro, col);
+        this.left = l;
+        this.right = r;
+        this.type = t;
+        this.row = ro;
+        this.column = col;
     }
 
     public exec(ambit: Ambit): Returned {
 
-        const leftValue = this.left.exec(ambit);
-        const rightValue = this.right.exec(ambit);
+        var valIz = this.left.exec(ambit);
+        var valDer = this.right.exec(ambit);
         switch (this.type) {
             case OpRelational.EQUALS:
 
-                return { value: (leftValue.value == rightValue.value), type: TypeAll.BOOLEAN };
+                return { value: (valIz.value == valDer.value), type: TypeAll.BOOLEAN };
 
                 break;
             case OpRelational.DISCTINCT:
-                return { value: (leftValue.value != rightValue.value), type: TypeAll.BOOLEAN };
+                return { value: (valIz.value != valDer.value), type: TypeAll.BOOLEAN };
                 break;
             case OpRelational.LESS:
 
-                return { value: (leftValue.value < rightValue.value), type: TypeAll.BOOLEAN };
+                return { value: (valIz.value < valDer.value), type: TypeAll.BOOLEAN };
                 break;
             case OpRelational.LESS_EQUALS:
-                return { value: (leftValue.value <= rightValue.value), type: TypeAll.BOOLEAN };
+                return { value: (valIz.value <= valDer.value), type: TypeAll.BOOLEAN };
 
                 break;
             case OpRelational.HIGHER:
-                return { value: (leftValue.value > rightValue.value), type: TypeAll.BOOLEAN };
+                return { value: (valIz.value > valDer.value), type: TypeAll.BOOLEAN };
 
                 break;
             case OpRelational.HIGHER_EQUALS:
-                return { value: (leftValue.value >= rightValue.value), type: TypeAll.BOOLEAN };
+                return { value: (valIz.value >= valDer.value), type: TypeAll.BOOLEAN };
 
                 break;
             default:

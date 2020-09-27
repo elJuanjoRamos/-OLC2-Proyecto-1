@@ -1,24 +1,39 @@
-import {Expression} from '../abstract/expression';
+import { Expression } from '../abstract/expression';
 import { TypeAll, Returned } from '../abstract/enums';
 
 
 export class Literal extends Expression {
 
-    constructor(private value : any, row : number, col: number, private type : number){
-        super(row, col);
+    private value: any;
+    public row: number;
+    public column: number;
+    private type: number;
+    constructor(v: any, r: number, c: number, t: number) {
+        super(r, c);
+        this.value = v;
+        this.row = r;
+        this.column = c;
+        this.type = t;
     }
 
-    public exec() : Returned {
-       
-        switch (this.type) {
-            case 0:
-                return {value : Number(this.value), type : TypeAll.NUMBER};
-            case 1:
-                return {value : this.value, type : TypeAll.STRING};
-            case 2:
-                return {value : (this.value=="false")?false:true, type : TypeAll.BOOLEAN};
-            case 7:
-                return {value : this.value, type : TypeAll.ANY};
+    public exec(): Returned {
+
+        if (this.type == 0) {
+            return { value: Number(this.value), type: TypeAll.NUMBER };
         }
+        else if (this.type == 1) {
+            return { value: this.value, type: TypeAll.STRING };
+        }
+        else if (this.type == 2) {
+            if (this.value == "false") {
+                return { value: false, type: TypeAll.BOOLEAN };
+            } else {
+                return { value: true, type: TypeAll.BOOLEAN };
+            }
+        }
+        else if (this.type == 7) {
+            return { value: this.value, type: TypeAll.ANY };
+        }
+
     }
 }

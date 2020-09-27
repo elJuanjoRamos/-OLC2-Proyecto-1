@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as parser from '../../jison/grammar/gram';
-import * as analisis from '../../jison/grammar/analisis';
+import * as astgram from '../../jison/grammar/ast';
+import * as grammar from '../../jison/grammar/grammar';
 import * as astGraph from '../../jison/tools/ast/ast';
 import { OutputController } from '../controller/output.controller';
 import { Ambit } from '../../jison/tools/id/ambit.identifier';
@@ -37,16 +37,18 @@ export class DashboardComponent implements OnInit {
       TablaSimbolosController.getInstance().clear();
       console.clear()
       const env = new Ambit(null, "Global");
-      let analisisAST = analisis.parse(this.strEntrada);
-      //let analisisGraico = parser.parse(this.strEntrada)
+      //let analisisAST = grammar.parse(this.strEntrada);
+      let analisisGraico = astgram.parse(this.strEntrada)
+     
       setTimeout(() => {
+        astGraph.generarArbol([analisisGraico.node]);
+
       }, 1000);
 
 
 
-      //astGraph.generarArbol([analisisGraico.node]);
-
-      for (const element of analisisAST) {
+     
+      /*for (const element of analisisAST) {
         try {
           if (element instanceof Function)
             element.exec(env);
@@ -65,7 +67,7 @@ export class DashboardComponent implements OnInit {
         } catch (error) {
           console.error(error)
         }
-      }
+      }*/
     } catch (error) {
       /**
        * INGRESAR ERRORES PARA REPORTE

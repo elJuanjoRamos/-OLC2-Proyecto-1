@@ -3,11 +3,19 @@ import { Instruction } from '../abstract/instruction';
 import { ErrorController } from '../../../components/controller/error.controller'
 export class Type extends Instruction {
 
-    constructor(public id, public type, public value,public row,public col) {
-        super(row, col);
-        this.id = id;
-        this.value = value;
-        this.type = type;
+    public id;
+     public type;
+      public value;
+      public row;
+      public col
+
+    constructor(i, t, v,r,c) {
+        super(r, c);
+        this.id = i;
+        this.value = v;
+        this.type = t;
+        this.row = r;
+        this.col = c;
     }
 
     public exec(ambit: Ambit) {

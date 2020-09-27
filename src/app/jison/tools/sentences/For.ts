@@ -10,13 +10,22 @@ import { ErrorController } from '../../../components/controller/error.controller
 export class FOR extends Instruction {
 
     
-    constructor(
-        private declaration:NoType | Declaration,
-        private condition: Expression,
-        private incrementDecrement: Expression,
-        private sentencias: Sentence,
-        row: number,column: number){
-        super(row, column);
+
+    private declaration:NoType | Declaration;
+    private condition: Expression;
+    private incrementDecrement: Expression;
+    private sentencias: Sentence;
+    public row: number;
+    public column: number;
+
+    constructor(d:NoType | Declaration, c: Expression,i: Expression,s: Sentence,r: number,col: number){
+        super(r, col);
+        this.declaration = d;
+        this.condition = c;
+        this.incrementDecrement = i;
+        this.sentencias = s;
+        this.row = r;
+        this.column = col;
     
     }
 

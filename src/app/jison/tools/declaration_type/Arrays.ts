@@ -15,7 +15,6 @@ export class Arrays extends Instruction {
     public exec(ambit: Ambit) {
 
 
-        var newAmbit = new Ambit(ambit, ambit.getName())
 
         if (this.values != null) {
 
@@ -30,7 +29,7 @@ export class Arrays extends Instruction {
                 //ESTE ELEMENTO ES DE TIPO ES DE TIPO ARRAYPARAM
 
 
-                if (!this.VerifyElement(arrayParam, newAmbit, this.id + '[' + index +']')) {
+                if (!this.VerifyElement(arrayParam, ambit, this.id + '[' + index +']')) {
                     break
                 }
 
@@ -38,7 +37,7 @@ export class Arrays extends Instruction {
             }
 
             if (flag) {
-                newAmbit.save(this.id, this.values, this.getArrayType(this.type), false); //GUARDO EL ARREGLO
+                ambit.save(this.id, this.values, this.getArrayType(this.type), false); //GUARDO EL ARREGLO
             }
 
 
@@ -105,35 +104,39 @@ export class Arrays extends Instruction {
 
 
     public getArrayType(type: TypeAll): number {
-        switch (type) {
-            case 0:
-                return 5
-            case 1:
-                return 4
-            case 2:
-                return 6
-            case 7:
-                return 7
+
+        if(type == 0){
+            return 5
+        }
+        if (type == 1) {
+            return 4
+        }
+        if (type == 2) {
+            return 6
+        }
+        if (type == 7) {
+            return 7
         }
     }
 
     public getType(type: TypeAll): string {
-        switch (type) {
-            case 0:
-                return "NUMBER"
-            case 1:
-                return "STRING"
-            case 2:
-                return "BOOLEAN"
-            case 4:
-                return "ARRAYSTRING"
-            case 5:
-                return "ARRAYNUMBER"
-            case 6:
-                return "ARRAYBOOLEAN"
-            case 7:
-                return "ARRAYANY"
+
+        if (type  == 0) {
+            return "NUMBER"
+        } else if(type == 1){
+            return "STRING"
+        } else if(type == 2){
+            return "BOOLEAN"
+        } else if(type == 4){
+            return "ARRAYSTRING"
+        } else if(type == 5){
+            return "ARRAYNUMBER"
+        } else if(type == 6){
+            return "ARRAYBOOLEAN"
+        } else if(type == 7){
+            return "ARRAYANY"
         }
+
         return ""
     }
 

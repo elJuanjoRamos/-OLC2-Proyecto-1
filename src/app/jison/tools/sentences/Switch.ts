@@ -5,15 +5,18 @@ import { Case } from "./Case"
 import { Sentence } from  './Sentence';
 export class Switch extends Instruction{
 
-    /**
-     * CONSTRUCTOR
-     * @param condition 
-     * @param code 
-     * @param row 
-     * @param column 
-     */
-    constructor(private condicion: Expression,private cases : Array<Case>, private def: Sentence | null, row : number, column : number){
-        super(row, column);
+    private condicion: Expression;
+    private cases : Array<Case> = new Array();
+     private sentences: Sentence | null;
+     public row : number;
+     public column : number
+    constructor(c: Expression,cs : Array<Case>, s: Sentence | null, r : number, cl : number){
+        super(r, cl);
+        this.condicion = c;
+        this.cases = cs;
+        this.sentences = s;
+        this.row = r;
+        this.column = cl;
 
     }
     public exec(ambit : Ambit){
@@ -39,9 +42,9 @@ export class Switch extends Instruction{
             }
         }
 
-        if (numeroCaso == -1 &&  this.def != null) { //SIGNIFICA QUE ENCONTRO COINCIDENCIAS DENTRO DE LOS CASOS
-            if (this.def != null) {
-                this.def.exec(ambit)                
+        if (numeroCaso == -1 &&  this.sentences != null) { //SIGNIFICA QUE ENCONTRO COINCIDENCIAS DENTRO DE LOS CASOS
+            if (this.sentences != null) {
+                this.sentences.exec(ambit)                
             }  
         }
         

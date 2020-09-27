@@ -7,15 +7,16 @@ import { ErrorController } from 'src/app/components/controller/error.controller'
 
 export class While extends Instruction{
 
-    /**
-     * CONSTRUCTOR
-     * @param condition 
-     * @param code 
-     * @param row 
-     * @param column 
-     */
-    constructor(private condicion: Expression,private code: Instruction,row: number, column: number){
-        super(row, column);
+    private condicion: Expression;
+    private sentences: Instruction;
+    public row: number;
+    public column: number
+    constructor(con: Expression,s: Instruction,r: number, c: number){
+        super(r, c);
+        this.condicion = con;
+        this.sentences = s;
+        this.row = r;
+        this.column = c;
     }
 
     public exec(ambit : Ambit) {
@@ -24,7 +25,7 @@ export class While extends Instruction{
             ambitName = ambit.getName()+"_While";
         }
 
-        var newAmbit = new Ambit(ambit, ambit);
+        var newAmbit = new Ambit(ambit, ambitName);
 
         let condicion = this.condicion.exec(newAmbit);
    
@@ -33,11 +34,11 @@ export class While extends Instruction{
         }
 
 
-        if (this.code != null) {
+        if (this.sentences != null) {
 
             while(condicion.value == true){
 
-                const element = this.code.exec(newAmbit);
+                const element = this.sentences.exec(newAmbit);
        
                 if(element != null || element != undefined){
                     if(element.type == 'Break')

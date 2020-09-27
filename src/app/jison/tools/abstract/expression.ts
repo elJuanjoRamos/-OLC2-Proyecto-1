@@ -6,7 +6,7 @@ import { Ambit } from '../id/ambit.identifier';
     public row: number;
     public column: number;
 
-    constructor(row, column) {
+    constructor(row: number, column: number) {
         this.row = row;
         this.column = column;
     }

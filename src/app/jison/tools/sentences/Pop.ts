@@ -6,8 +6,15 @@ import { Ambit } from '../id/ambit.identifier';
 
 
 export class Pop extends Instruction {
-    constructor(private id: string, row: number, column: number) {
-        super(row, column);
+    private id: string
+    public row: number
+    public column: number
+
+    constructor(i: string, r: number, c: number) {
+        super(r, c);
+        this.id = i;
+        this.column = c;
+        this.row = r;
     }
 
 

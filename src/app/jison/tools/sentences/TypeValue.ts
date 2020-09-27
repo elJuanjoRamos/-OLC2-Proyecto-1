@@ -5,10 +5,16 @@ import { ErrorController } from '../../../components/controller/error.controller
 
 export class TypeValue extends Instruction{
 
-    constructor( public id, public value: Expression, public row, public col){
-        super(row, col);
-        this.id = id;
-        this.value = value;
+    public id;
+    public value: Expression;
+    public row;
+    public column;
+    constructor( i, v: Expression, r:number, c:number){
+        super(r, c);
+        this.id = i;
+        this.value = v;
+        this.row = r;
+        this.column = c;
     }
 
     public exec(ambit: Ambit) {

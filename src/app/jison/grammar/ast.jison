@@ -90,9 +90,10 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 "length"                return 'RESERV_LENGTH'
 "type"                  return 'RESERV_TYPE'
 
+
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'ID';
 <<EOF>>               return 'EOF';
-.                     return 'TOKEN_DESC';
+.                     return 'DESCONICIDO';
 
 /lex
 
@@ -102,7 +103,7 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 %left '>=', '<=', '<', '>'
 %left '+' '-'
 %left '*' '/'
-%left '%' '^'
+%left '%' '^' '**'
 %left '!'
 
 %start Init
@@ -127,17 +128,18 @@ INSTRUCCIONES
 ;
 
 INSTRUCCION
-    : VAR_DECLARATION
-    {
-        $$ = { node: newNode(yy, yystate, $1.node) };
-    }
-    |
+    :
     LET_DECLARATION
     {
         $$ = {node: newNode(yy, yystate, $1.node)};
     }
     |
     CONST_DECLARATION
+    {
+        $$ = {node: newNode(yy, yystate, $1.node)};
+    }
+    |
+    TYPE_DECLARATION
     {
         $$ = {node: newNode(yy, yystate, $1.node)};
     }
@@ -198,6 +200,11 @@ INSTRUCCION
     }
     |
     FUNCTIONS
+    {
+        $$ = {node: newNode(yy, yystate, $1.node)};
+    }
+    |
+    PUSH
     {
         $$ = {node: newNode(yy, yystate, $1)};
     }
@@ -339,21 +346,24 @@ POP
 
 
 DECLARATION_NOTYPE
-    : ID ':' TIPO '=' EXPRESSION ';'
+    :ID '=' EXPRESSION ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6)};
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};  
     }
     |
-    ID ':' TIPO ARRAY '=' EXPRESSION ';'
+    ID '.' ID '=' EXPRESSION ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5, $6.node, $7)};
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5.node)};  
     }
     |
-    ID '=' EXPRESSION ';'
+    EXPRESSION ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
+        $$ = {node: newNode(yy, yystate, $1.node, $2)};  
     }
 ;
+
+
+
 
 TIPO
     : 'RESERV_STRING'
@@ -408,6 +418,11 @@ EXPRESSION
     } 
     |
     EXPRESSION '^' EXPRESSION
+    {
+        $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node)};
+    }
+    |
+    EXPRESSION '**' EXPRESSION
     {
         $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node)};
     } 
@@ -476,6 +491,11 @@ EXPRESSION
     {
         $$ = {node: newNode(yy, yystate, $1.node)};
     }
+    |
+    JSON_EXPRESSION
+    {
+        $$ = {node: newNode(yy, yystate, $1.node)};
+    }
 ;
 
 IDENTIFICADOR
@@ -529,16 +549,37 @@ IDENTIFICADOR
 
 
 
+
 MATRIZ_IDEN
     : MATRIZ_IDEN '[' IDEN_ARRAY ']'
     { 
-        $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node, $4)};
+         $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node, $4)};
     }
     | '[' IDEN_ARRAY ']'
     { 
-        $$ = {node: newNode(yy, yystate, $1, $2.node, $3)};
+       $$ = {node: newNode(yy, yystate, $1, $2.node, $3)};
     }
     ;
+
+IDEN_ARRAY 
+    :
+    NUMERO
+    { 
+         $$ = {node: newNode(yy, yystate, $1)};
+    }
+    | ID
+    { 
+         $$ = {node: newNode(yy, yystate, $1)};
+    }
+    ;
+
+CONTINUE 
+    : 'RESERV_CONTINUE'  ';'
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2)};
+    }
+;
+
 
 BREAK 
     : 'RESERV_BREAK'  ';'
@@ -547,12 +588,6 @@ BREAK
     }
 ;
 
-CONTINUE 
-    : 'RESERV_CONTINUE'  ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2)};
-    }
-;
 
 RETURN 
     : 'RESERV_RETURN'  ';'
@@ -602,19 +637,7 @@ ELSEIF
     }
 ;
 
-WHILE 
-    : 'RESERV_WHILE' '(' EXPRESSION ')' SENTENCIA
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node)};
-    }
-;
 
-DOWHILE 
-    : 'RESERV_DO' SENTENCIA 'RESERV_WHILE' '(' EXPRESSION ')' ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2.node, $3, $4, $5.node, $6, $7)};
-    }
-;
 
 SWITCH
     : 'RESERV_SWITCH' '(' EXPRESSION ')' '{' CASES DEFAULT '}'
@@ -624,6 +647,12 @@ SWITCH
         } else {
             $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5, $6.node, $7.node, $8)};
         }
+    }
+;
+DOWHILE 
+    : 'RESERV_DO' SENTENCIA 'RESERV_WHILE' '(' EXPRESSION ')' ';'
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2.node, $3, $4, $5.node, $6, $7)};
     }
 ;
 
@@ -637,6 +666,13 @@ CASES
         $$ = {node: newNode(yy, yystate, $1.node)};
     }
 ;
+WHILE 
+    : 'RESERV_WHILE' '(' EXPRESSION ')' SENTENCIA
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node)};
+    }
+;
+
 
 CASE
     : 'RESERV_CASE'  EXPRESSION ':' INSTRUCCIONES
@@ -657,46 +693,38 @@ DEFAULT
 ;
 
 FOR 
-    : 'RESERV_FOR' '(' FOREXP ')' SENTENCIA
+    : 'RESERV_FOR' '(' DECLA_FOR ';' EXPRESSION ';' EXPRESSION ')' SENTENCIA
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node)};
+         $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6, $7.node, $8, $9.node)};
+    }
+    | 'RESERV_FOR''(' 'RESERV_VAR' ID 'RESERV_IN' ID ')' SENTENCIA
+    {
+         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5, $6, $7, $8.node)};
+    }
+    | 'RESERV_FOR''(' 'RESERV_LET' ID 'RESERV_IN' ID ')' SENTENCIA
+    {
+         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5, $6, $7, $8.node)};
+    }
+    | 'RESERV_FOR''(' 'RESERV_VAR' ID 'RESERV_OF' ID ')' SENTENCIA
+    {
+         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5, $6, $7, $8.node)};
+    }
+    | 'RESERV_FOR''(' 'RESERV_LET' ID 'RESERV_OF' ID ')' SENTENCIA
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5, $6, $7, $8.node)};
     }
 ;
 
-FOREXP
-    : 'RESERV_LET' ID TIPOFOR ID
-    {
-       $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
-    }
-    | 'RESERV_VAR' ID TIPOFOR ID
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
-    }
-    | 'RESERV_CONST' ID TIPOFOR ID
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4)};
-    }
-    | DECLARACION_FOR ';' EXPRESSION ';' EXPRESSION
-    {
-        $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node, $4, $5.node)};
-    }
-;
+DECLA_FOR
+    : FOR_DECLARATION  { $$ = {node: newNode(yy, yystate, $1.node)}; }
+    | ID '=' EXPRESSION { $$ = {node: newNode(yy, yystate, $1, $2, $3.node)}; }
+    ;
 
-TIPOFOR
-    : 'RESERV_OF'
-    {
-        $$ = {node: newNode(yy, yystate, $1)};
-    }
-    | 'RESERV_IN'
-    { 
-        $$ = {node: newNode(yy, yystate, $1)};
-    }
-;
 
-DECLARACION_FOR
+FOR_DECLARATION
     : 'RESERV_VAR' ID ':' TIPO '=' EXPRESSION
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5, $6.node)};
+         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5, $6.node)};
     }
     |
     'RESERV_VAR' ID '=' EXPRESSION
@@ -714,6 +742,7 @@ DECLARACION_FOR
     }
 ;
 
+
 CONSOLE: 
     'RESERV_CONSOLE' '.' 'RESERV_LOG' '(' EXPRESSION ')' ';'
     {
@@ -724,99 +753,222 @@ CONSOLE:
     }
 ;
 
-FUNCTIONS: 
-    'RESERV_FUNCTION' ID '(' ')' SENTENCIA_FUNCION
+JSON_EXPRESSION
+    : '{' OBJECTS '}'
     {
-        $$ = $1;
-    }
-    |
-    'RESERV_FUNCTION' ID '(' PARAMETROS ')' SENTENCIA_FUNCION
-    {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1, $2.node, $3)};
     }
 ;
 
-SENTENCIA_FUNCION: 
-    '{' FUNCIONHIJA '}'
+
+OBJECTS
+    : 
+    OBJECTS ',' OBJECT
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node)};
+    }
+    | OBJECT
+    {
+        $$ = {node: newNode(yy, yystate, $1.node)};
+    }
+;
+
+OBJECT
+    : ID ':' EXPRESSION
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node)};
+    }
+;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///================== TYPES
+
+TYPE_DECLARATION
+    : 'RESERV_TYPE' ID '=' '{' PRIMITIVE_DATAS '}' ';' 
+    {
+         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5.node, $6, $7)};
+    }
+;
+
+
+PRIMITIVE_DATAS
+    : PRIMITIVE_DATAS ',' PRIMITIVE_DATA
+    {
+         $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node)};
+    }
+    | PRIMITIVE_DATA
+    {
+         $$ = {node: newNode(yy, yystate, $1.node)};
+    }
+;
+
+PRIMITIVE_DATA
+    : ID ':' TYPE_TIPO
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node)};
+    }
+;
+
+TYPE_TIPO
+    : 'RESERV_NUMBER'
+    { 
+        $$ = {node: newNode(yy, yystate, $1)};
+    }
+    | 'RESERV_STRING'
+    {
+        $$ = {node: newNode(yy, yystate, $1)};
+    }
+    | 'RESERV_BOOLEAN'
+    { 
+        $$ = {node: newNode(yy, yystate, $1)};
+    }
+    | ID
+    { 
+        $$ = {node: newNode(yy, yystate, $1)};
+    }
+;
+
+
+///================ FUNCIONES
+
+FUNCTIONS
+    : 
+    'RESERV_FUNCTION' ID '(' PARAMETERS ')' ':' TIPO SENTENCIA
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5, $6, $7.node, $8.node)}; 
+    }
+    | 
+    'RESERV_FUNCTION' ID '(' PATAMETERS ')' SENTENCIA
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node, $5, $6.node)};    
+    }
+    |
+    'RESERV_FUNCTION' ID '(' ')' ':' TIPO SENTENCIA
+    {
+         $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5, $6.node, $7.node)}; 
+    }
+    |
+    'RESERV_FUNCTION' ID '(' ')' SENTENCIA
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5.node)};    
+    }
+;
+
+
+
+
+
+FUNCTION_SENTENCE: 
+    '{' CHILDFUNCTION '}'
+    {
+        $$ = {node: newNode(yy, yystate, $1, $2.node, $3)}; 
     }
     |
     '{' '}'
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1, $2, $3)}; 
     }
 ;
 
-FUNCIONHIJA: 
-    FUNCION_HIJA OTRA_INSTRUCCION
+CHILDFUNCTION: 
+    CHILD_FUNCTION NEW_INSTRUCTION
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1.node, $2.node)}; 
     }
 ;
 
-FUNCION_HIJA: 
-    'RESERV_FUNCTION' ID '(' ')' SENTENCIA_FUNCION
+CHILD_FUNCTION: 
+    'PR_FUNCTION' ID '(' ')' FUNCTION_SENTENCE
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5.node)}; 
     }
     |
-    'RESERV_FUNCTION' ID '(' PARAMETROS ')' SENTENCIA_FUNCION
+    'PR_FUNCTION' ID '(' PATAMETERS ')' FUNCTION_SENTENCE
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4.node,$5, $6.node)}; 
     }
 ;
 
-OTRA_INSTRUCCION: 
-    FUNCION_HIJA OTRA_INSTRUCCION
+NEW_INSTRUCTION: 
+    CHILD_FUNCTION NEW_INSTRUCTION
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1.node, $2.node)}; 
     }
     | /*EPSILON*/
     {
-        $$ = $1;
+        $$ = null;
     }
 ;
 
-PARAMETROS: 
-    PARAMETROS ',' PARAMETRO
+
+
+
+
+
+PATAMETERS: 
+    PATAMETERS ',' PARAMS
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1.node,$2, $3.node)}; 
     }
     |
-    PARAMETRO
+    PARAMS
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1.node)}; 
     }
 ;
 
-PARAMETRO: 
+PARAMS: 
     ID ':' TIPO
     {
-        $$ = $1;
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node)}; 
     }
 ;
 
-CALL_FUNCTION:
+
+CALL_FUNCTION
+    :
     ID '(' ')' ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4)};
+       $$ = {node: newNode(yy, yystate, $1, $2, $3, $4)}; 
     }
     |
-    ID '(' PARAMETROS_LLAMADA ')' ';'
+    ID '(' CALL_PARAMS ')' ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5)};
+        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5)}; 
     }
 ;
 
-PARAMETROS_LLAMADA: 
-    PARAMETROS_LLAMADA ',' EXPRESSION
+CALL_PARAMS: 
+    CALL_PARAMS ',' EXPRESSION
     {
-        $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node)};
+        $1.push($3);
+        $$ = $1;
     }
     |
     EXPRESSION
     {
-        $$ = {node: newNode(yy, yystate, $1.node)};
+        $$ = [$1]
     }
 ;

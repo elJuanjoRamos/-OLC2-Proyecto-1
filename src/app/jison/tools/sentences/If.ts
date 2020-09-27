@@ -7,9 +7,19 @@ import { ErrorController } from '../../../components/controller/error.controller
 
 export class IF extends Instruction {
 
-    
-    constructor(private condition: Expression,private code: Instruction,private elseDeclaracion: Instruction | null,row: number,column: number){
-        super(row, column);
+    private condition : Expression;
+    private sentences : Instruction;
+    private elif : Instruction
+    public row: number;
+    public column: number
+
+    constructor(cond: Expression, sent: Instruction, elseif: Instruction | null,r: number,c: number){
+        super(r, c);
+        this.condition = cond;
+        this.sentences = sent;
+        this.elif = elseif
+        this.row = r;
+        this.column = c;
     }
 
     public exec(ambit : Ambit) {
@@ -24,18 +34,23 @@ export class IF extends Instruction {
 
         const condition = this.condition.exec(ifAmbit);
         if(condition.type != TypeAll.BOOLEAN){
-            ErrorController.getInstance().add("La condicion no es booleana", "Semantico" ,this.row, this.column);
+            ErrorController.getInstance().add("La condicion del If no es booleana", "Semantico" ,this.row, this.column);
         }
 
         if(condition.value == true){
-            if (this.code != null) {
-                return this.code.exec(ifAmbit);                
+
+            if (this.sentences != null) {
+                return this.sentences.exec(ifAmbit);                
             }
+
         }
         else{
             
-            var elseAmbit = new Ambit(ambit, ambitName);
-            return this.elseDeclaracion?.exec(elseAmbit);
+            if (this.elif != null) {
+                var elseAmbit = new Ambit(ambit, ambitName);    
+                return this.elif.exec(elseAmbit);        
+            }
+
         }
     }
 }

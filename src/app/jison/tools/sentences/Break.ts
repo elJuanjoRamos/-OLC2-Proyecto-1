@@ -1,7 +1,12 @@
 import { Ambit } from '../id/ambit.identifier';
 export class Break  {
 
-    constructor(private row : number, private column: number){
+    private row: number;
+    private column:number;
+
+    constructor(r : number, c: number){
+        this.row = r;
+        this.column = c;
     }
     public exec(ambit : Ambit) {
 

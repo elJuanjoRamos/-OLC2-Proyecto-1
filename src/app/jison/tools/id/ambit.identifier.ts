@@ -9,15 +9,15 @@ export class Ambit {
     public functions: Map<string, Function>;
     private types: Map<string, Identifier>;
     private name: string = "";
-   /**
-     * CONSTRUCTOR
-     * @param anterior 
-     */
-    constructor(public anterior : Ambit | null, public n){
+    
+    public anterior:Ambit | null;
+
+    constructor(a : Ambit | null, n: string){
         this.variables = new Map();
         this.functions = new Map();
         this.types = new Map();
         this.name = n;
+        this.anterior = a;
     }
 
 

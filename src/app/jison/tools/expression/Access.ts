@@ -6,21 +6,20 @@ import { ErrorController } from '../../../components/controller/error.controller
 
 export class Access extends Expression {
 
-    
-    /**
-     * CONSTRUCTOR
-     * @param id 
-     * @param row 
-     * @param column 
-     */
-    constructor(private id: string, row : number, column: number){
-        super(row, column);
+    private id:string;  
+    public row: number;
+    public column:number
+    constructor(i: string, r : number, c: number){
+        super(r, c);
+        this.id = i;
+        this.row =r;
+        this.column = c;
     }
 
     
     public exec(ambit: Ambit): Returned {
 
-        const value = ambit.getVariable(this.id);
+        var value = ambit.getVariable(this.id);
 
         if(value == null) {
 

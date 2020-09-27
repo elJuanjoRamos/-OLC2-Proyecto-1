@@ -4,17 +4,19 @@ export class Tabla {
     private name;
     private type;
     private ambit;
+    private value;
     private returned;
     private variable;
     private funcion;
     private row
     private column
 
-    constructor(n, t, a, r, v, f, ro, col) {
+    constructor(n, t, a, val, r, v, f, ro, col) {
         console.log(r)
         this.name = n;
         this.type = t;
         this.ambit = a;
+        this.value = val;
         this.returned = r;
         this.variable = v;
         this.funcion = f;
@@ -80,6 +82,14 @@ export class Tabla {
     }
     getFuncion() {
         return this.funcion;
+    }
+
+    setValue(v) {
+        this.value = v;
+    }
+
+    getValue() {
+        return this.value;
     }
 
     setFuncion(v) {

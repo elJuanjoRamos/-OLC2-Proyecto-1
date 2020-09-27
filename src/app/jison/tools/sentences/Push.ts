@@ -8,8 +8,15 @@ import { ArrayParam } from '../model/ArrayParam';
 
 
 export class Pushs extends Instruction {
-    constructor(private id: string, private value: Expression, row: number, column: number) {
-        super(row, column);
+
+    private id: string;
+     private value: Expression;
+     public row: number;
+    public column: number
+    constructor(i: string, v: Expression, r: number, c: number) {
+        super(r, c);
+        this.id = i;
+        this.value = v;
     }
 
 

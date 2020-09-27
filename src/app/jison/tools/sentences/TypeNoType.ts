@@ -5,10 +5,20 @@ import { Expression } from '../abstract/expression';
 
 export class TypeNoType extends Instruction{
 
-    constructor( public id, public id2, public value: Expression, public row, public col){
-        super(row, col);
-        this.id = id;
-        this.value = value;
+    public id;
+    public idtemp;
+    public value: Expression;
+    public row;
+    public column;
+
+
+    constructor( i, t, v: Expression, r, c){
+        super(r, c);
+        this.id = i;
+        this.value = v;
+        this.idtemp = t;
+        this.row = r;
+        this.column = c;
     }
 
     public exec(environment: Ambit) {
@@ -19,12 +29,11 @@ export class TypeNoType extends Instruction{
             const value = environment.getVariable(this.id);
             
             if(value == null) {
-                ErrorController.getInstance().add("La variable " + this.id + " no existe o no esta declarada", "Semántico", this.row, this.col);
+                ErrorController.getInstance().add("La variable " + this.id + " no existe o no esta declarada", "Semántico", this.row, this.column);
             }
-    
             for (const iterator of value.value.value) {
 
-                if(iterator.id == this.id2) {
+                if(iterator.id == this.idtemp) {
 
                     iterator.value.value = val.value;
                     

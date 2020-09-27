@@ -21,10 +21,10 @@ export class TablaSimbolosController {
     
     
 
-    add(names:string, type:string, ambit:string, returned:any, variable:boolean, funcion:boolean, row: number, col:number){
+    add(names:string, type:string, ambit:string, value:any, returned:any, variable:boolean, funcion:boolean, row: number, col:number){
        
         if (!this.searchVariable(names)) { //Guarda la variable siempre y cuando no haya sido agregado antes
-            this.arrayTabla.push(new Tabla(names, type, ambit, returned, variable, funcion, row, col));
+            this.arrayTabla.push(new Tabla(names, type, ambit,value, returned, variable, funcion, row, col));
             
         }    
     }

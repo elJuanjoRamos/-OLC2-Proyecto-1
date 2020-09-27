@@ -8,8 +8,19 @@ import { Ambit } from '../id/ambit.identifier';
 
 export class Constant extends Instruction{
 
-    constructor(private id: string, private type:any, private value: Expression, row: number, column: number){
-        super(row, column);
+    private id:string;
+    private type:any;
+    private value:Expression;
+    public row:number;
+    public column:number;
+
+    constructor(i: string, t:any, v: Expression, r: number, c: number){
+        super(r, c);
+        this.id = i;
+        this.type = t;
+        this.value = v;
+        this.row = r;
+        this.column = c;
     }
     public exec(ambit: Ambit) {
         try {

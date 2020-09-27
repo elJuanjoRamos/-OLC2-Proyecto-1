@@ -6,13 +6,19 @@ import { Sentence } from './Sentence';
 
 export class FORIN extends Instruction {
 
-    constructor(
-        private declaration: Declaration,
-        private array: string,
-        private sentencias: Sentence,
-        row: number,column: number){
-        super(row, column);
-       
+    private declaration: Declaration;
+        private array: string;
+        private sentencias: Sentence;
+        public row: number;
+        public column: number;
+
+    constructor(d: Declaration,a: string,s: Sentence,r: number,c: number){
+        super(r, c);
+       this.declaration = d;
+       this.array = a;
+       this.sentencias = s;
+       this.row = r;
+       this.column = c;
 
         //NoType | Declaration
         //NoType | Declaration

@@ -7,9 +7,17 @@ import { Literal } from '../expression/Literal';
 
 export class Call extends Instruction {
 
+    public id: string;
+    public expresiones: Array<Expression> = new Array();
+    public row:number;
+    public column: number;
 
-    constructor( public id:string, public expresiones : Array<Expression>, public row,  public col ){
-        super(row, col);
+    constructor( i:string, ex : Array<Expression>, r: number,  c: number ){
+        super(r, c);
+        this.id = i;
+        this.expresiones = ex;
+        this.row = r;
+        this.column = c;
     }
 
     public exec(ambit : Ambit) {
@@ -24,12 +32,12 @@ export class Call extends Instruction {
                 
                 this.printAmbit("==========  " + ambit.getName() + " AMBIT ==========")
 
-                this.printAmbit("Nombre |Tipo   |Ambito |Retorno    |Vari   |Func");
+                this.printAmbit("Nombre |Tipo   |Ambito |Valor    |Retorno    |Vari   |Func");
 
                 for (let i = 0; i < tempo.length; i++) {
                     const element = tempo[i];
                     
-                    var temp = element.getName() + "   |" + element.getType() + "   |" + element.getAmbit() + "   |" + element.getReturned() + "   |" + element.getVariable() +  "   |" + element.getFuncion()
+                    var temp = element.getName() + "   |" + element.getType() + "   |" + element.getAmbit()+ "   |" + element.getValue() + "   |" + element.getReturned() + "   |" + element.getVariable() +  "   |" + element.getFuncion()
                     this.printAmbit(  temp  );    
                 }
                 this.printAmbit("========== END AMBIT ==========")
@@ -38,7 +46,7 @@ export class Call extends Instruction {
 
 
         } else {
-
+            
             var ambitName = "Function_"+this.id;
             var func = ambit.getFunc(this.id);
 

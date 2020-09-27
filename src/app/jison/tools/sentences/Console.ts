@@ -7,14 +7,14 @@ import { Ambit } from '../id/ambit.identifier';
 
 export class Console extends Instruction {
 
-    /**
-     * CONSTRUCTOR
-     * @param value 
-     * @param row 
-     * @param col 
-     */
-    constructor(private value: Expression,row: number,col: number){
-        super(row, col);
+    private value:Expression;
+    public row:number;
+    public column:number;
+    constructor(v: Expression,r: number,c: number){
+        super(r, c);
+        this.value = v;
+        this.column =c;
+        this.row = r;
     }
 
 

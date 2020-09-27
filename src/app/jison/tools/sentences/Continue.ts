@@ -3,11 +3,15 @@ import { Ambit } from '../id/ambit.identifier';
 
 export class Continue extends Instruction {
 
-    constructor(public row : number, public col : number
-    ){
-        super(row, col);
+    public row:number;
+    public column:number;
+
+    constructor(r : number, c : number){
+        super(r, c);
+        this.row =r;
+        this.column = c;
     }
     public exec(ambit : Ambit) {
-        return {row : this.row, col: this.col, type : 'continue'};
+        return {row : this.row, column: this.column, type : 'continue'};
     }
 }

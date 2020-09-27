@@ -126,7 +126,7 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'ID';
 <<EOF>>               return 'EOF';
-.                     return 'TK_Desconocido';
+.                     return 'DESCONOCIDO';
 
 /lex
 
@@ -136,7 +136,7 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 %left '>=', '<=', '<', '>'
 %left '+' '-'
 %left '*' '/'
-%left '%' '^'
+%left '%' '^' '**'
 %left '!'
 
 %start Init
@@ -167,6 +167,11 @@ INSTRUCCION
         $$ = $1
     }
     |
+    TYPE_DECLARATION
+    {
+        $$ = $1
+    }
+    |
     CONST_DECLARATION
     {
         $$ = $1
@@ -176,30 +181,17 @@ INSTRUCCION
     {
         $$ = $1
     }
-    |
-    TYPE_DECLARATION
-    {
-        $$ = $1
-    }
-    |
-    BREAK
-    {
-        $$ = $1;
-    }
+    
     |
     CONTINUE
     {
         $$ = $1
     }
+    
     |
-    RETURN
+    BREAK
     {
-        $$ = $1
-    }
-    |
-    IF
-    {
-        $$ = $1
+        $$ = $1;
     }
     |
     SWITCH
@@ -207,7 +199,7 @@ INSTRUCCION
         $$ = $1;
     }
     |
-    WHILE
+    IF
     {
         $$ = $1
     }
@@ -217,12 +209,12 @@ INSTRUCCION
         $$ = $1
     }
     |
-    FOR
+    WHILE
     {
         $$ = $1
     }
     |
-    CONSOLE
+    FOR
     {
         $$ = $1
     }
@@ -235,6 +227,16 @@ INSTRUCCION
     FUNCTIONS
     {
         $$ = $1;
+    }
+    |
+    RETURN
+    {
+        $$ = $1
+    }
+    |
+    CONSOLE
+    {
+        $$ = $1
     }
     |
     PUSH
@@ -412,16 +414,7 @@ CONST_DECLARATION
 
 
 DECLARATION_NOTYPE
-    : ID ':' TIPO '=' EXPRESSION ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5.node, $6)};
-    }
-    |
-    ID ':' TIPO ARRAY '=' EXPRESSION ';'
-    {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3.node, $4, $5, $6.node, $7)};
-    }
-    |
+    : 
     ID '=' EXPRESSION ';'
     {
         $$ = new NoType($1, $3, @1.first_line, @1.first_column);
@@ -482,21 +475,27 @@ EXPRESSION
     EXPRESSION '*' EXPRESSION
     {
         $$ = new Arithmetic($1, $3, OpArithmetic.MULTIPLICATION, @1.first_line,@1.first_column);
-    } 
+    }
     |
-    EXPRESSION '/' EXPRESSION
+    EXPRESION '^' EXPRESION
     {
-        $$ = new Arithmetic($1, $3, OpArithmetic.DIVISION, @1.first_line,@1.first_column);
+        $$ = new Aritmetica($1, $3, OpcionAritmetica.EXPONENTE, @1.first_line,@1.first_column);
+    }
+    |
+    EXPRESION '**' EXPRESION
+    {
+        $$ = new Aritmetica($1, $3, OpcionAritmetica.EXPONENTE, @1.first_line,@1.first_column);
     } 
+      
     |
     EXPRESSION '%' EXPRESSION
     {
         $$ = new Arithmetic($1, $3, OpArithmetic.MODULE, @1.first_line,@1.first_column);
-    } 
+    }
     |
-    EXPRESSION '^' EXPRESSION
+    EXPRESSION '/' EXPRESSION
     {
-        $$ = new Arithmetic($1, $3, OpArithmetic.EXPONENT, @1.first_line,@1.first_column);
+        $$ = new Arithmetic($1, $3, OpArithmetic.DIVISION, @1.first_line,@1.first_column);
     } 
     |
     EXPRESSION '*' '*' EXPRESSION
@@ -646,6 +645,17 @@ IDEN_ARRAY
     }
     ;
 
+RETURN 
+    
+    : 'RESERV_RETURN' EXPRESSION ';'
+    {
+        $$ = new Return($2, @1.first_line, @1.first_column);
+    }
+    | 'RESERV_RETURN'  ';'
+    {
+        $$ = new Return(null, @1.first_line, @1.first_column);
+    }
+;
 
 
 BREAK 
@@ -663,34 +673,15 @@ CONTINUE
     }
 ;
 
-RETURN 
-    
-    : 'RESERV_RETURN' EXPRESSION ';'
-    {
-        $$ = new Return($2, @1.first_line, @1.first_column);
-    }
-    | 'RESERV_RETURN'  ';'
-    {
-        $$ = new Return(null, @1.first_line, @1.first_column);
-    }
-;
+
+
+
+
+
 IF 
     : 'RESERV_IF' '(' EXPRESSION ')' SENTENCIA ELIF
     {
         $$ = new IF($3, $5, $6, @1.first_line, @1.first_column);
-    }
-;
-
-
-
-SENTENCIA 
-    : '{' INSTRUCCIONES '}'
-    {
-        $$ = new Sentence($2, @1.first_line, @1.first_column)
-    }
-    | '{' '}'
-    {
-        $$ = null;
     }
 ;
 
@@ -708,6 +699,19 @@ ELIF
         $$ = null;
     }
 ;
+
+SENTENCIA 
+    : '{' INSTRUCCIONES '}'
+    {
+        $$ = new Sentence($2, @1.first_line, @1.first_column)
+    }
+    | '{' '}'
+    {
+        $$ = null;
+    }
+;
+
+
 
 WHILE 
     : 'RESERV_WHILE' '(' EXPRESSION ')' SENTENCIA
@@ -797,12 +801,12 @@ FOR
 ;
 
 DECLA_FOR
-    : DECLARACION_FOR  { $$ = $1 }
+    : FOR_DECLARATION  { $$ = $1 }
     | ID '=' EXPRESSION { $$ = new NoType($1, $3, @1.first_line, @1.first_column); }
     ;
 
 
-DECLARACION_FOR
+FOR_DECLARATION
     : 'RESERV_VAR' ID ':' TIPO '=' EXPRESSION
     {
          $$ = new Declaration($2, $4, $6, @1.first_line, @1.first_column);
@@ -913,17 +917,31 @@ TYPE_TIPO
 ///================ FUNCIONES
 
 FUNCTIONS
-    : 
+    :
+    'RESERV_FUNCTION' ID '(' PARAMETERS ')' ':' TIPO SENTENCIA
+    {
+        $$ = new Function($2, $8, $4, @1.first_line, @1.first_column);
+    }
+    |
     'RESERV_FUNCTION' ID '(' PATAMETERS ')' SENTENCIA
     {
         $$ = new Function($2, $6, $4, @1.first_line, @1.first_column);
     }
+    |
+    'RESERV_FUNCTION' ID '(' ')' ':' TIPO SENTENCIA
+    {
+        $$ = new Function($2, $7, [], @1.first_line, @1.first_column);
+    }
+    
     |
     'RESERV_FUNCTION' ID '(' ')' SENTENCIA
     {
         $$ = new Function($2, $5, [], @1.first_line, @1.first_column);
     }
 ;
+
+
+
 
 
 
@@ -954,7 +972,7 @@ CHILD_FUNCTION:
         $$ = $1;
     }
     |
-    'PR_FUNCTION' ID '(' PARAMETROS ')' FUNCTION_SENTENCE
+    'PR_FUNCTION' ID '(' PATAMETERS ')' FUNCTION_SENTENCE
     {
         $$ = $1;
     }

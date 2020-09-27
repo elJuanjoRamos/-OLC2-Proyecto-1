@@ -6,9 +6,16 @@ import { Sentence } from './Sentence';
 
 export class Case extends Instruction {
 
-    
-    constructor(private condition: Expression,private code: Sentence,row: number,column: number){
-        super(row, column);
+    private condition:Expression;
+    private sentences: Sentence;
+    public row:number;
+    public column:number;
+    constructor(con: Expression,s: Sentence,r: number,c: number){
+        super(r, c);
+        this.column = c;
+        this.row = r;
+        this.condition = con;
+        this.sentences = s;
     }
 
     public exec(ambit: Ambit){
@@ -19,7 +26,7 @@ export class Case extends Instruction {
         }
 
         var newAmbit = new Ambit(ambit, ambitName);
-        const element = this.code.exec(newAmbit);
+        const element = this.sentences.exec(newAmbit);
         
         if(element != null || element != undefined){
             if(element.type == 'break')

@@ -3,8 +3,14 @@ import { Ambit } from '../id/ambit.identifier';
 
 export class Sentence extends Instruction{
 
-    constructor(private code : Array<Instruction>, row : number, column : number){
-        super(row, column);
+    private sentences : Array<Instruction> = new Array();
+    public row : number;
+    public column : number
+    constructor(s : Array<Instruction>, r : number, c : number){
+        super(r, c);
+        this.sentences = s;
+        this.row = r;
+        this.column = c;
     }
 
     public exec(amb : Ambit) {
@@ -16,7 +22,7 @@ export class Sentence extends Instruction{
 
         const newAmbit = new Ambit(amb, ambitName);
         
-        for(const instr of this.code){
+        for(const instr of this.sentences){
             try {
                 const element = instr.exec(newAmbit);
                 if(element != undefined || element != null)

@@ -6,15 +6,18 @@ import { ErrorController } from '../../../components/controller/error.controller
 
 export class DoWhile extends Instruction{
 
-    /**
-     * CONSTRUCTOR
-     * @param condicion 
-     * @param code 
-     * @param row 
-     * @param col 
-     */
-    constructor(private condicion: Expression, private code: Instruction,row: number,column: number){
-        super(row, column);
+    private condicion:Expression;
+    private sentences:Instruction;
+    public row:number;
+    public column:number;
+
+
+    constructor(con: Expression, s: Instruction,r: number,c: number){
+        super(r, c);
+        this.condicion = con;
+        this.sentences = s;
+        this.row = r;
+        this.column = c;
     }
 
     public exec(ambit : Ambit) {
@@ -30,7 +33,7 @@ export class DoWhile extends Instruction{
 
         }
         do {
-            const element = this.code.exec(newAmbit);
+            const element = this.sentences.exec(newAmbit);
             if(element != null || element != undefined){
                 if(element.type == 'break')
                     break;

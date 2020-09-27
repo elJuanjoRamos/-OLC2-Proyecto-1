@@ -3,9 +3,14 @@ import { Ambit }        from '../id/ambit.identifier';
 import { Instruction }  from '../abstract/instruction';
 
 export class Return extends Instruction {
-    
-    constructor( private value: Expression, public row, public col){
-        super(row, col);
+    private value: Expression;
+     public row:number;
+    public column:number;
+    constructor( v: Expression, r:number, c:number){
+        super(r, c);
+        this.value = v;
+        this.row = r;
+        this.column = c;
     }
 
     public exec(ambit : Ambit) {
@@ -15,6 +20,6 @@ export class Return extends Instruction {
             val = this.value.exec(ambit);            
         }
 
-        return {value: val, row : this.row, col: this.col, type : 'return'};
+        return {value: val, row : this.row, column: this.column, type : 'return'};
     }
 }

@@ -6,8 +6,19 @@ import { Ambit } from '../id/ambit.identifier'
 
 export class Logical extends Expression {
 
-    constructor(private left: Expression, private right: Expression, private type: OpLogical, row: number, column: number) {
-        super(row, column);
+    private left:Expression;
+    private right: Expression;
+    private type: OpLogical;
+    public row:number;
+    public column:number;
+
+    constructor(l: Expression, r: Expression, t: OpLogical, ro: number, c: number) {
+        super(ro, c);
+        this.left = l;
+        this.right = r;
+        this.type = t;
+        this.row = ro;
+        this.column = c;
     }
 
 
