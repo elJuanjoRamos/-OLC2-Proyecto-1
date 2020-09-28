@@ -2,6 +2,7 @@ import { Instruction } from '../abstract/instruction';
 import { ErrorController } from '../../../components/controller/error.controller';
 import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
+import { OutputController } from 'src/app/components/controller/output.controller';
 
 
 
@@ -57,9 +58,7 @@ export class Pop extends Instruction {
 
                             ambit.setVariable(variable.id, arregloTemporal, variable.type, false)
 
-                            console.log(variable);
                             var a = ambit.getVariable(nombreArregloOriginal)
-                            console.log(a);
                             return (arregloElementos.pop()).getElement();
                         } 
 
@@ -71,24 +70,24 @@ export class Pop extends Instruction {
                     
                     
                     } else {
-                        ErrorController.getInstance().add("El arreglo " + this.id + " no contiene elementos", "Semántico", this.column, this.row);
+                        OutputController.getinstance().setValue("El arreglo " + this.id + " no contiene elementos" + ", en la linea: " + this.row + ", en la columna: " + this.column)
                         return {value: 'undefined'};
                     }  
                     
-
+    
 
 
                 } else {
-                    ErrorController.getInstance().add("El arreglo " + this.id + " no contiene elementos", "Semántico", this.column, this.row);
+                    OutputController.getinstance().setValue("El arreglo " + this.id + " no contiene elementos" + ", en la linea: " + this.row + ", en la columna: " + this.column)
                     return {value: 'undefined'};
                 }
                             
             } else {
-                ErrorController.getInstance().add("La variable " + this.id + " no es un Array", "Semántico", this.column, this.row);
+                OutputController.getinstance().setValue("El arreglo " + this.id + " no contiene elementos" + ", en la linea: " + this.row + ", en la columna: " + this.column)
                 return {value: 'undefined'};
             }
         } else {
-            ErrorController.getInstance().add("La variable " + this.id + " no está declarada", "Semántico", this.column, this.row);
+            OutputController.getinstance().setValue("El arreglo " + this.id + " no contiene elementos" + ", en la linea: " + this.row + ", en la columna: " + this.column)
             return {value: 'undefined'};
         }
 

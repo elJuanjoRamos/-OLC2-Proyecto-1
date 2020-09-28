@@ -14,8 +14,10 @@ import { Function } from '../../jison/tools/sentences/Function'
 })
 export class DashboardComponent implements OnInit {
 
-  data: any = [];
   tabla: any = [];
+  errores: any = [];
+  errorlexico: any = [];
+  
   constructor() { }
 
   ngOnInit(): void {
@@ -37,7 +39,7 @@ export class DashboardComponent implements OnInit {
       TablaSimbolosController.getInstance().clear();
       console.clear()
       const env = new Ambit(null, "Global");
-      //let analisisAST = grammar.parse(this.strEntrada);
+      let analisisAST = grammar.parse(this.strEntrada);
       let analisisGraico = astgram.parse(this.strEntrada)
      
       setTimeout(() => {
@@ -47,8 +49,7 @@ export class DashboardComponent implements OnInit {
 
 
 
-     
-      /*for (const element of analisisAST) {
+      for (const element of analisisAST) {
         try {
           if (element instanceof Function)
             element.exec(env);
@@ -67,7 +68,7 @@ export class DashboardComponent implements OnInit {
         } catch (error) {
           console.error(error)
         }
-      }*/
+      }
     } catch (error) {
       /**
        * INGRESAR ERRORES PARA REPORTE
@@ -77,16 +78,9 @@ export class DashboardComponent implements OnInit {
     }
     this.strSalida = OutputController.getinstance().getOut;
     this.tabla = TablaSimbolosController.getInstance().getArray()
-    console.log(this.tabla)
-    console.log(OutputController.getinstance().getOut)
+    
     // IMPRIMIR ERRORES
-    ErrorController.getInstance().print();
-
-    this.obtenerErrores();
-  }
-
-  obtenerErrores() {
-    this.data = [];
-    this.data = ErrorController.getInstance().getArray;
+    this.errores = ErrorController.getInstance().getArray;
+    this.errorlexico = ErrorController.getInstance().getArrayLexico;
   }
 }

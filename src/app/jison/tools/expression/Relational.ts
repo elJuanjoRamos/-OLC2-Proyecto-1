@@ -5,7 +5,7 @@ import { Ambit } from '../id/ambit.identifier';
 
 
 export class Relational extends Expression {
-
+    public name = "Relational";
     private left:Expression;
     private right:Expression;
     private type: OpRelational;
@@ -13,7 +13,7 @@ export class Relational extends Expression {
     public column: number;
 
     constructor(l: Expression, r: Expression, t: OpRelational, ro: number, col: number) {
-        super(ro, col);
+        super(ro, col, "Relational");
         this.left = l;
         this.right = r;
         this.type = t;
@@ -55,5 +55,19 @@ export class Relational extends Expression {
         }
 
         return { value: false, type: TypeAll.BOOLEAN }
+    }
+
+    public getLeft(){
+        return this.left;
+    }
+
+    public getRight(){
+        return this.right;
+    }
+    public setRight(r){
+        this.right = r;
+    }
+    public getName(){
+        return this.name;
     }
 }

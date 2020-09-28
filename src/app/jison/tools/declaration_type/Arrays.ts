@@ -3,6 +3,8 @@ import { ErrorController } from '../../../components/controller/error.controller
 import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 import { ArrayParam } from '../model/ArrayParam';
+import { OutputController } from 'src/app/components/controller/output.controller';
+import { TablaSimbolosController } from 'src/app/components/controller/tablasimbolo.conroller';
 
 
 export class Arrays extends Instruction {
@@ -32,12 +34,12 @@ export class Arrays extends Instruction {
                 if (!this.VerifyElement(arrayParam, ambit, this.id + '[' + index +']')) {
                     break
                 }
-
-                
             }
 
             if (flag) {
                 ambit.save(this.id, this.values, this.getArrayType(this.type), false); //GUARDO EL ARREGLO
+                TablaSimbolosController.getInstance().add(this.id, this.getType(this.type), ambit.getName(), "[]", 0, true, false, this.row, this.column);
+
             }
 
 
@@ -56,6 +58,9 @@ export class Arrays extends Instruction {
             //VERIFICO QUE LOS TIPOS SEAN IGUALES O QUE EL TIPO SEA ANY
             if ((this.getType(this.type) != this.getType(temp.type)) && this.getType(this.type) != 'ARRAYANY') {
 
+                OutputController.getinstance().setValue("No se puede asignar el tipo " + this.getType(temp.type)
+                        + " al tipo " + this.getType(this.type));
+                        
                 //SI NO COINCIDEN MARCA ERROR Y SE DETIENE
                 ErrorController.getInstance().add("No se puede asignar el tipo " + this.getType(temp.type)
                     + " al tipo " + this.getType(this.type), "Semántico", this.column, this.row);

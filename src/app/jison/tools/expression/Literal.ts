@@ -3,13 +3,13 @@ import { TypeAll, Returned } from '../abstract/enums';
 
 
 export class Literal extends Expression {
-
+    public name = "Literal";
     private value: any;
     public row: number;
     public column: number;
     private type: number;
     constructor(v: any, r: number, c: number, t: number) {
-        super(r, c);
+        super(r, c, "Literal");
         this.value = v;
         this.row = r;
         this.column = c;
@@ -35,5 +35,9 @@ export class Literal extends Expression {
             return { value: this.value, type: TypeAll.ANY };
         }
 
+    }
+
+    public getName(){
+        return this.name;
     }
 }

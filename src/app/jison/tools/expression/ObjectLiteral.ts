@@ -3,12 +3,12 @@ import { Returned, TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 
 export class ObjectLiteral extends Expression {
-
+    public name = "ObjectLiteral";
     private value:any;
     public row:number;
     public column: number;
     constructor( v: any, r : number, c: number, ){
-        super(r, c);
+        super(r, c, "ObjectLiteral");
         this.value = v;
         this.row = r;
         this.column = c;
@@ -30,5 +30,8 @@ export class ObjectLiteral extends Expression {
         }
 
         return {value: data, type : TypeAll.TYPE};
+    }
+    public getName(){
+        return this.name;
     }
 }

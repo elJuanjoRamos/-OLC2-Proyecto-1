@@ -3,6 +3,7 @@ import { TypeAll } from '../abstract/enums'
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
 import { ErrorController } from '../../../components/controller/error.controller';
+import { OutputController } from 'src/app/components/controller/output.controller';
 
 
 export class IF extends Instruction {
@@ -35,6 +36,8 @@ export class IF extends Instruction {
         const condition = this.condition.exec(ifAmbit);
         if(condition.type != TypeAll.BOOLEAN){
             ErrorController.getInstance().add("La condicion del If no es booleana", "Semantico" ,this.row, this.column);
+            OutputController.getinstance().setValue("La condicion del If no es booleana" + ", en la linea: " + this.row + ", en la columna: " + this.column)
+
         }
 
         if(condition.value == true){

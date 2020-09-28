@@ -2,6 +2,7 @@ import { Instruction } from '../abstract/instruction';
 import { ErrorController } from '../../../components/controller/error.controller';
 import { Ambit } from '../id/ambit.identifier';
 import { Expression } from '../abstract/expression';
+import { OutputController } from 'src/app/components/controller/output.controller';
 
 export class TypeNoType extends Instruction{
 
@@ -29,7 +30,9 @@ export class TypeNoType extends Instruction{
             const value = environment.getVariable(this.id);
             
             if(value == null) {
-                ErrorController.getInstance().add("La variable " + this.id + " no existe o no esta declarada", "Semántico", this.row, this.column);
+                ErrorController.getInstance().add("La variable " + this.id + " no está declarada", "Semántico", this.column, this.row);
+                OutputController.getinstance().setValue("La variable " + this.id + " no está declarada" + ", en la linea: " + this.row + ", en la columna: " + this.column)
+    
             }
             for (const iterator of value.value.value) {
 

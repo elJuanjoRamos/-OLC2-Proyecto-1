@@ -4,6 +4,7 @@ import { ErrorController } from '../../../components/controller/error.controller
 import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 import { ArrayParam } from '../model/ArrayParam';
+import { OutputController } from 'src/app/components/controller/output.controller';
 
 
 
@@ -56,6 +57,8 @@ export class ArrayObject extends Instruction {
                     if ((this.getType(this.type) != this.getType(temp.type)) && this.getType(this.type) != 'ARRAYANY' ) { //VERIFICO QUE LOS TIPOS SEAN IGUALES
     
                         //SI NO COINCIDEN MARCA ERROR Y SE DETIENE
+                        OutputController.getinstance().setValue("No se puede asignar el tipo " + this.getType(temp.type)
+                        + " al tipo " + this.getType(this.type));
                         ErrorController.getInstance().add("No se puede asignar el tipo " + this.getType(temp.type)
                             + " al tipo " + this.getType(this.type), "Semántico", this.column, this.row);
                         flag = false

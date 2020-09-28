@@ -6,19 +6,23 @@ import { NoType } from './NoType';
 import { Declaration } from './Declaration';
 import { Sentence } from './Sentence';
 import { ErrorController } from '../../../components/controller/error.controller';
+import { OutputController } from 'src/app/components/controller/output.controller';
+import { Relational } from '../expression/Relational';
+import { Access } from '../expression/Access';
+import { Literal } from '../expression/Literal';
 
 export class FOR extends Instruction {
 
     
 
     private declaration:NoType | Declaration;
-    private condition: Expression;
+    private condition: Relational;
     private incrementDecrement: Expression;
     private sentencias: Sentence;
     public row: number;
     public column: number;
 
-    constructor(d:NoType | Declaration, c: Expression,i: Expression,s: Sentence,r: number,col: number){
+    constructor(d:NoType | Declaration, c: Relational,i: Expression,s: Sentence,r: number,col: number){
         super(r, col);
         this.declaration = d;
         this.condition = c;
@@ -37,11 +41,40 @@ export class FOR extends Instruction {
         }
        var newAmbit = new Ambit(ambit, ambitName)
        
+       
         this.declaration.exec(newAmbit)
         
-        var forCondition = this.condition.exec(newAmbit);
+        var forCondition;
+        if (this.condition.getRight().name =="Access") {
+            
+            var temp:any = this.condition.getRight();
 
+            var array:any = ambit.getVariable(temp.getId());
+
+            if (array != null) {
+
+                if (array.type == 7 || array.type == 4|| array.type == 5|| array.type == 6) {
+                    var len = array.value.length;
+                    
+                    this.condition.setRight(new Literal(len, 0,0, 0));
+                    
+                    forCondition = this.condition.exec(newAmbit);
+                    
+                } else {
+                    OutputController.getinstance().setValue("La variable " + temp.getId() + " no es un arreglo" + ", en la linea: " + this.row + ", en la columna: " + this.column)
+                }    
+            } else {
+                forCondition = { type:false }
+                OutputController.getinstance().setValue("La variable " + temp.getId() + " no esta definida" + ", en la linea: " + this.row + ", en la columna: " + this.column)
+            }
+
+        } else {
+            forCondition = this.condition.exec(newAmbit);
+        }
+
+        
         if(forCondition.type != TypeAll.BOOLEAN){
+            OutputController.getinstance().setValue("La condicion del For no es booleana" + ", en la linea: " + this.row + ", en la columna: " + this.column)
             ErrorController.getInstance().add("La condicion del For no es booleana", "Semántico", this.column, this.row);
         }
 
@@ -70,6 +103,7 @@ export class FOR extends Instruction {
                 forCondition = this.condition.exec(newAmbit);
     
                 if(forCondition.type != TypeAll.BOOLEAN){
+                    OutputController.getinstance().setValue("La condicion del For no es booleana" + ", en la linea: " + this.row + ", en la columna: " + this.column)
                     ErrorController.getInstance().add("La condicion del For no es booleana", "Semántico", this.column, this.row);
                 }
             }

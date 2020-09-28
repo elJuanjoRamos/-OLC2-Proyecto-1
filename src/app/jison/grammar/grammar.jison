@@ -5,6 +5,7 @@
     const { Relational } = require('../tools/expression/Relational');
     const { Logical } = require('../tools/expression/Logical');
     const { Access } = require('../tools/expression/Access');
+    const { NullEx } = require('../tools/expression/Null');
     const { TypeAccess } = require('../tools/expression/TypeAccess');
     const { Literal } = require('../tools/expression/Literal');
     const { ObjectLiteral } = require('../tools/expression/ObjectLiteral');
@@ -36,6 +37,9 @@
     const { Call } = require('../tools/sentences/Call');
     const { Function } = require('../tools/sentences/Function');
     const { Constant } = require('../tools/sentences/Constant');
+    const { ErrorProduction } = require('../tools/sentences/ErrorProduction');
+    const { LexicoProduccion } = require('../tools/sentences/LexicoProduccion');
+    const { ArrayAccess } = require('../tools/expression/ArrayAccess');
         
 
 
@@ -123,10 +127,11 @@ string3             (\`([^`]|{BSL}|{BSL2})*\`)
 "any"                   return 'RESERV_ANY'
 "length"                return 'RESERV_LENGTH'
 "type"                  return 'RESERV_TYPE'
+"null"                  return 'RESERV_NULL'
 
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'ID';
 <<EOF>>               return 'EOF';
-.                     return 'DESCONOCIDO';
+.                     return new LexicoProduccion(yytext, "Lexico", yylloc.first_line, yylloc.first_column, 2);;
 
 /lex
 
@@ -147,7 +152,7 @@ Init
     : INSTRUCCIONES EOF 
     {
         return $$;
-    } 
+    }
 ;
 
 INSTRUCCIONES
@@ -248,7 +253,9 @@ INSTRUCCION
     {
         $$ = $1;
     }*/
-    
+    | error { 
+        $$ = new ErrorProduction(yytext, "Sitactico",this._$.first_line, this._$.first_column, 1);
+    }
 ;
 
 
@@ -362,12 +369,12 @@ MORE_ARRAY
 
 
 PRODUCCION_ID
-    : ID  MATRIZ_IDEN '.'           { $$ = $1 + $2 }  
-    | ID  MATRIZ_IDEN               { $$ = $1 + $2 }
-    | ID  '.'  'RESERV_LENGTH'      { $$= $1 }
+    : ID  MATRIZ_IDEN '.'           { $$ = new ArrayAccess($1,$2, @1.first_line, @1.first_column) }  
+    | ID  MATRIZ_IDEN               { $$ = new ArrayAccess($1,$2, @1.first_line, @1.first_column) }
+    | ID  '.'  'RESERV_LENGTH'      { $$= new Access($1, @1.first_line, @1.first_column) }
     | ID  '.'   ID                  { $$ = new TypeAccess($1, $3, @1.first_line, @1.first_column) }
-    | ID  '.'                       { $$= $1 }
-    | ID                            { $$= $1 }
+    | ID  '.'                       { $$= new Access($1, @1.first_line, @1.first_column) }
+    | ID                            { $$= new Access($1, @1.first_line, @1.first_column) }
     ;
 
 PUSH
@@ -599,6 +606,10 @@ IDENTIFICADOR
     { 
         $$ = new Literal($1, @1.first_line, @1.first_column, 0)
     }
+    | 'RESERV_NULL'
+    { 
+        $$ = new NullEx(@1.first_line, @1.first_column, 4)
+    }
     | DECIMAL
     { 
         $$ = new Literal($1, @1.first_line, @1.first_column, 0)
@@ -611,39 +622,29 @@ IDENTIFICADOR
     { 
         $$ = new Literal($1, @1.first_line, @1.first_column, 2)
     }
+    
     /*| ID  MATRIZ_IDEN //esto es para arreglos y matrices
     { 
         $$ = new Access($1 + $2, @1.first_line, @1.first_column)
     }*/
     | PRODUCCION_ID
     { 
-        $$ = new Access($1, @1.first_line, @1.first_column)
+        $$ = $1
     }
     
 ;
 
 MATRIZ_IDEN
-    : MATRIZ_IDEN '[' IDEN_ARRAY ']'
+    : MATRIZ_IDEN '[' IDENTIFICADOR ']'
     { 
-        $$ = $1 + '[' + $3 + ']'
+        $$ = $1.push($3) 
     }
-    | '[' IDEN_ARRAY ']'
+    | '[' IDENTIFICADOR ']'
     { 
-        $$ = '[' + $2 + ']'
+        $$ = [$2] 
     }
     ;
 
-IDEN_ARRAY 
-    :
-    NUMERO
-    { 
-        $$ = $1
-    }
-    | ID
-    { 
-        $$ = $1
-    }
-    ;
 
 RETURN 
     
@@ -923,7 +924,7 @@ FUNCTIONS
         $$ = new Function($2, $8, $4, @1.first_line, @1.first_column);
     }
     |
-    'RESERV_FUNCTION' ID '(' PATAMETERS ')' SENTENCIA
+    'RESERV_FUNCTION' ID '(' PARAMETERS ')' SENTENCIA
     {
         $$ = new Function($2, $6, $4, @1.first_line, @1.first_column);
     }
@@ -972,7 +973,7 @@ CHILD_FUNCTION:
         $$ = $1;
     }
     |
-    'PR_FUNCTION' ID '(' PATAMETERS ')' FUNCTION_SENTENCE
+    'PR_FUNCTION' ID '(' PARAMETERS ')' FUNCTION_SENTENCE
     {
         $$ = $1;
     }
@@ -1002,8 +1003,8 @@ NEW_INSTRUCTION:
 
 
 
-PATAMETERS: 
-    PATAMETERS ',' PARAMS
+PARAMETERS: 
+    PARAMETERS ',' PARAMS
     {
         $1.push($3);
         $$ = $1;

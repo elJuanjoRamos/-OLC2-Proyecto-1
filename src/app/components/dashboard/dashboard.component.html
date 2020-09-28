@@ -39,13 +39,13 @@
               </div>
               <div class="card-body">
                
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <button class="btn btn-outline-success" (click)="analize()"
+                <div>
+                  <div>
+                    <button class="btn btn-outline-success btn-block" (click)="analize()"
                       type="button">Analizar</button>
                   </div>
                 </div>
-                
+                <br>
                 <!--<textarea #textArea id="textArea0" style="width: 100%; height: 460px;"></textarea>-->
                 <div>
                   <textarea class="rownr" style="height: 500px;" rows="20" cols="3" value="1" readonly></textarea>
@@ -75,13 +75,13 @@
         </div>
       </div>
     </div>
-    <div class="tab-pane" id="ast" role="tabpanel" style='overflow-x:scroll;overflow-y:hidden;width:1920;'>
+    <div class="tab-pane"  id="ast" role="tabpanel" style='overflow-x:scroll;overflow-y:hidden;width:1920;'>
 
 
       <div >
         <div id="graph-container" name="graph-container">
           
-          <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet"></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" style="width:500000; " preserveAspectRatio="xMinYMin meet"></svg>
         </div>  
     </div>
     
@@ -98,13 +98,8 @@
       <div>
         <ul class="nav nav-tabs justify-content-center" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#lex" role="tab">
-              <i class="now-ui-icons object_lexico"></i> Lexico
-            </a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#sint" role="tab">
-              <i class="now-ui-icons object_sintactico"></i> Sintactico
+              <i class="now-ui-icons object_sintactico"></i> Errores
             </a>
           </li>
           
@@ -119,11 +114,34 @@
       <div class="tab-content">
         <!-- Tab panes -->
     <div class="tab-content text-center">
-      <div class="tab-pane active" id="lex" role="tabpanel">
-        <p>I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it’s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
-      </div>
+    
       <div class="tab-pane" id="sint" role="tabpanel">
-        <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
+      
+        <div class="container">
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#ID</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Fila</th>
+                <th scope="col">Columna</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let err of errores;">
+                <td>{{err.id}}</td>
+                <td>{{err.lex}}</td>
+                <td>{{err.description}}</td>
+                <td>{{err.row}}</td>
+                <td>{{err.column}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      
+      
       </div>
       <div class="tab-pane" id="tabla" role="tabpanel">
       
@@ -135,6 +153,7 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Tipo</th>
                 <th scope="col">Ambito</th>
+                <th scope="col">Valor</th>
                 <th scope="col">Retorno</th>
                 <th scope="col">variable</th>
                 <th scope="col">funcion</th>
@@ -147,6 +166,7 @@
                 <td>{{tab.name}}</td>
                 <td>{{tab.type}}</td>
                 <td>{{tab.ambit}}</td>
+                <td>{{tab.value}}</td>
                 <td>{{tab.returned}}</td>
                 <td>{{tab.variable}}</td>
                 <td>{{tab.funcion}}</td>

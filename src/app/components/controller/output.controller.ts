@@ -21,7 +21,7 @@ export class OutputController {
      * ASIGNAR VALOR
      */
     public setValue(strSalida: string) {
-        this.strSalida += strSalida;
+        this.strSalida = this.strSalida+ "\n" + strSalida;
     }
 
     /**

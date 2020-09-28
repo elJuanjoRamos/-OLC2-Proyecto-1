@@ -4,6 +4,7 @@ import { ErrorController } from '../../../components/controller/error.controller
 import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
 import { ArrayParam } from '../model/ArrayParam';
+import { OutputController } from 'src/app/components/controller/output.controller';
 
 
 
@@ -61,17 +62,24 @@ export class Pushs extends Instruction {
                 } else { // SI NO SON IGUALES MARCA ERROR SEMANTICO
                     ErrorController.getInstance().add("No se puede asignar el tipo " + this.getType(temp.type)
                         + " al tipo " + this.getType(variable.type), "Semántico", this.column, this.row);
+                    OutputController.getinstance().setValue("No se puede asignar el tipo " + this.getType(temp.type)
+                    + " al tipo " + this.getType(variable.type) + ", en la linea: " + this.row + ", en la columna: " + this.column)
+        
                 }//*/
             
             } else {
-                ErrorController.getInstance().add("La variable " + this.id + " no es un Array", "Semántico", this.column, this.row);
-            
+                OutputController.getinstance().setValue("No se puede asignar el tipo " + this.getType(temp.type)
+                + " al tipo " + this.getType(variable.type) + ", en la linea: " + this.row + ", en la columna: " + this.column)
+        
             }
         
 
         }else {
             ErrorController.getInstance().add("La variable " + this.id + " no está declarada", "Semántico", this.column, this.row);
+            OutputController.getinstance().setValue("La variable " + this.id + " no está declarada" + ", en la linea: " + this.row + ", en la columna: " + this.column)
+
         }
+
 
         
 

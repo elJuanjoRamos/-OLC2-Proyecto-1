@@ -208,6 +208,10 @@ INSTRUCCION
     {
         $$ = {node: newNode(yy, yystate, $1)};
     }
+    | error {
+        $$ = {node: newNode(yy, yystate, 'error')};
+     
+    }
 ;
 
 
@@ -264,12 +268,12 @@ LET_DECLARATION
     // var arreglo1: Array<string> = new Array(4);
     | 'RESERV_LET' ID ':' 'RESERV_ARRAY' '<' TIPO '>' '=' 'RESERV_NEW'  'RESERV_ARRAY' '(' NULLORDATA ')'  ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5, $6.node, $7, $8, $9, $10.node, $11, $12.node, $13, $14)};
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5, $6.node, $7, $8, $9, $10, $11, $12.node, $13, $14)};
     }
     // var array = []
     | 'RESERV_LET' ID '=' '['  NULLORDATA ']' ';'
     {
-        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5, $6.node, $7, $8)};
+        $$ = {node: newNode(yy, yystate, $1, $2, $3, $4, $5.node, $6, $7)};
     }
     | 'RESERV_LET' ID  '=' 'RESERV_NEW'  'RESERV_ARRAY' '(' NULLORDATA ')'  ';'
     {
@@ -551,11 +555,11 @@ IDENTIFICADOR
 
 
 MATRIZ_IDEN
-    : MATRIZ_IDEN '[' IDEN_ARRAY ']'
+    : MATRIZ_IDEN '[' IDENTIFICADOR ']'
     { 
          $$ = {node: newNode(yy, yystate, $1.node, $2, $3.node, $4)};
     }
-    | '[' IDEN_ARRAY ']'
+    | '[' IDENTIFICADOR ']'
     { 
        $$ = {node: newNode(yy, yystate, $1, $2.node, $3)};
     }

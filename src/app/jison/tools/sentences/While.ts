@@ -3,6 +3,7 @@ import {Expression} from '../abstract/expression'
 import { TypeAll } from '../abstract/enums'
 import { Ambit } from '../id/ambit.identifier';
 import { ErrorController } from 'src/app/components/controller/error.controller';
+import { OutputController } from 'src/app/components/controller/output.controller';
 
 
 export class While extends Instruction{
@@ -30,7 +31,9 @@ export class While extends Instruction{
         let condicion = this.condicion.exec(newAmbit);
    
         if(condicion.type != TypeAll.BOOLEAN){
-            ErrorController.getInstance().add("La condicion del While no es booleana", "Semántico", this.row, this.column);
+            ErrorController.getInstance().add("La condicion del While no es booleana", "Semántico", this.column, this.row);
+            OutputController.getinstance().setValue("La condicion del While no es booleana" + ", en la linea: " + this.row + ", en la columna: " + this.column)
+
         }
 
 

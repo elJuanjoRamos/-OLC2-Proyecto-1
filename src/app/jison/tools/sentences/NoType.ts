@@ -3,6 +3,7 @@ import { ErrorController } from '../../../components/controller/error.controller
 import { Expression } from '../abstract/expression';
 import { Ambit } from '../id/ambit.identifier';
 import { TypeAll } from '../abstract/enums';
+import { OutputController } from 'src/app/components/controller/output.controller';
 
 export class NoType extends Instruction{
     private type: any;
@@ -35,7 +36,9 @@ export class NoType extends Instruction{
                                         ambit.setVariable(this.id, val.value, val.type, false);        
                                         break;
                                     default:
-                                        throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
+                                        ErrorController.getInstance().add("El tipo " + val.value + " no es asignable con " + this.getType(this.type), "Semantico" ,this.row, this.column);
+                                        OutputController.getinstance().setValue("El tipo " + val.value + " no es asignable con " + this.getType(this.type) + ", en la linea: " + this.row + ", en la columna: " + this.column)
+        
                                         break;
                                 }
                             } else if (val.type == 1) {
@@ -45,7 +48,8 @@ export class NoType extends Instruction{
                                         ambit.setVariable(this.id, val.value, val.type, false);
                                         break;
                                     default:
-                                        throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(valor.type), row: this.row, column : this.column};
+                                        ErrorController.getInstance().add("El tipo " + val.value + " no es asignable con " + this.getType(this.type), "Semantico" ,this.row, this.column);
+                                        OutputController.getinstance().setValue("El tipo " + val.value + " no es asignable con " + this.getType(this.type) + ", en la linea: " + this.row + ", en la columna: " + this.column)
                                         break;
                                 }
                             } else if (val.type ==2) {
@@ -54,17 +58,21 @@ export class NoType extends Instruction{
                                         ambit.setVariable(this.id, val.value, val.type, false);                        
                                         break;
                                     default:
-                                        ErrorController.getInstance().add("El tipo " + val.value + " no es asignable con " + this.getType(valor.type), "Semántico", this.row, this.column);
+                                        ErrorController.getInstance().add("El tipo " + val.value + " no es asignable con " + this.getType(this.type), "Semantico" ,this.row, this.column);
+                                        OutputController.getinstance().setValue("El tipo " + val.value + " no es asignable con " + this.getType(this.type) + ", en la linea: " + this.row + ", en la columna: " + this.column)
+            
                                     break;
                                 }
                                 
                             } else {
-                                ErrorController.getInstance().add("El tipo " + val.value + " no es asignable con " + this.getType(valor.type), "Semántico", this.row, this.column);
+                                ErrorController.getInstance().add("El tipo " + val.value + " no es asignable con " + this.getType(this.type), "Semantico" ,this.row, this.column);
+                                OutputController.getinstance().setValue("El tipo " + val.value + " no es asignable con " + this.getType(this.type) + ", en la linea: " + this.row + ", en la columna: " + this.column)
                             }
             } else {
 
                 ErrorController.getInstance().add("No se puede cambiar el tipo de la variable " + this.id + " por que es una constante", "Semántico", this.row, this.column);
-        
+                OutputController.getinstance().setValue("No se puede cambiar el tipo de la variable " + this.id + " por que es una constante" + ", en la linea: " + this.row + ", en la columna: " + this.column)
+
             }
 
             

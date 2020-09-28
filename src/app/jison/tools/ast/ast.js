@@ -2,8 +2,8 @@ exports.generarArbol = function generarArbol(datoArbol) {
 
     let size = longitudArbol(datoArbol[0]);
     var margin = { top: 20, right: 0, bottom: 20, left: 0 },
-        width = 55 * size - margin.right - margin.left,
-        height = 60 * size - margin.top - margin.bottom;
+        width = 10 * size - margin.right - margin.left,
+        height = 15 * size - margin.top - margin.bottom;
 
     var i = 0,
         duration = 750,

@@ -1,4 +1,5 @@
 import { ErrorController } from 'src/app/components/controller/error.controller';
+import { OutputController } from 'src/app/components/controller/output.controller';
 import { Instruction } from '../abstract/instruction';
 import { Ambit } from '../id/ambit.identifier';
 import { Declaration } from './Declaration';
@@ -67,7 +68,9 @@ export class FOROF extends Instruction {
                 }
             }
         } else {
-            ErrorController.getInstance().add("No existe la variable "+ this.array , "Semántico", this.column, this.row);
+            ErrorController.getInstance().add("La variable "  + this.array + " no existe o no es un arreglo", "Semántico", this.column, this.row);
+            OutputController.getinstance().setValue("La variable "  + this.array + " no existe o no es un arreglo" + ", en la linea: " + this.row + ", en la columna: " + this.column)
+
         }
 
 

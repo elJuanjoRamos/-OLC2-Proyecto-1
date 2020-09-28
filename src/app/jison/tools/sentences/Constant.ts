@@ -3,6 +3,7 @@ import { Expression } from '../abstract/expression';
 import { ErrorController } from '../../../components/controller/error.controller';
 import { TypeAll } from '../abstract/enums';
 import { Ambit } from '../id/ambit.identifier';
+import { OutputController } from 'src/app/components/controller/output.controller';
 
 
 
@@ -30,7 +31,11 @@ export class Constant extends Instruction{
                 ambit.save(this.id, val.value, val.type, true);
             } else {
                 if((this.type != val.type) && this.type != 7) {
-                    throw {error: "El tipo " + val.value + " no es asignable con " + this.getType(this.type), row: this.row, column : this.column};
+
+                    ErrorController.getInstance().add("El tipo " + val.value + " no es asignable con " + this.getType(this.type), "Semantico" ,this.row, this.column);
+                    OutputController.getinstance().setValue("El tipo " + val.value + " no es asignable con " + this.getType(this.type) + ", en la linea: " + this.row + ", en la columna: " + this.column)
+                 
+                    
                 } else {
                     ambit.save(this.id, val.value, val.type, true);
                 }

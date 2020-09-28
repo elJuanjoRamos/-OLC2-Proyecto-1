@@ -5,6 +5,10 @@ export class ErrorController {
     private arrayError: Error[] = [];
     private id:number = 1;
 
+
+    private arraylexico: Error[] = [];
+    private idlexico:number = 1;
+
     //SINGLETON
     private static instancia: ErrorController;
 
@@ -21,22 +25,30 @@ export class ErrorController {
         return this.arrayError; 
     }
 
-    add(descrip:string, type:string, row: number, col:number){
+    public get getArrayLexico() : Error[] {
+        return this.arraylexico; 
+    }
+
+    add(descrip:String, type:String, row: number, col:number){
         var token = new Error(this.id, descrip, type, row, col);
         this.arrayError.push(token);
         this.id++;
     }
 
-    print(){
-        console.log("MOSTRAR REPORTE DE ERRORES")
-        this.arrayError.forEach(e => {
-            console.error(e.toString());
-        });
+
+    addlexico(descrip:String, type:String, row: number, col:number){
+        var token = new Error(this.idlexico, descrip, type, row, col);
+        this.arraylexico.push(token);
+        this.idlexico++;
     }
+
+    
 
     clear(){
         this.arrayError = [];
+        this.arraylexico = [];
         this.id = 1;
+        this.idlexico = 1;
     }
 
 }

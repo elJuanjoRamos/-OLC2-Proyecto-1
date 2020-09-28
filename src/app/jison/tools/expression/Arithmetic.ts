@@ -1,5 +1,7 @@
 import { Expression } from '../abstract/expression';
 import { TypeAll, OpArithmetic, Returned } from '../abstract/enums';
+import { OutputController } from 'src/app/components/controller/output.controller';
+import { ErrorController } from 'src/app/components/controller/error.controller';
 
 
 
@@ -10,9 +12,9 @@ export class Arithmetic extends Expression {
     private type: OpArithmetic;
     public row: number;
     public column: number;
-
+    public name = "Arithmetic";
     constructor(l: Expression, ri: Expression, t: OpArithmetic, r: number, c: number) {
-        super(r, c);
+        super(r, c, "Arithmetic");
         this.left = l;
         this.right = ri;
         this.type = t;
@@ -43,7 +45,12 @@ export class Arithmetic extends Expression {
                         result = { value: (varIz.value.toString() + valDer.value.toString()), type: TypeAll.STRING };
                     }
                     else {
-                        throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+
+                        var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                        OutputController.getinstance().setValue(texto);
+                        
+                        ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+            
                     }
                 }
                 /**
@@ -76,11 +83,19 @@ export class Arithmetic extends Expression {
                             result = { value: (varIz.value.toString() + valDer.value.toString()), type: TypeAll.STRING };
                             break;
                         default:
-                            throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
-                    }
+                            var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                            OutputController.getinstance().setValue(texto);
+                            
+                            ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+                
+                        }
 
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+    
                 }
 
                 break;
@@ -90,10 +105,19 @@ export class Arithmetic extends Expression {
                     if (valDer.type == 0) {
                         result = { value: (varIz.value - valDer.value), type: TypeAll.NUMBER };
                     } else {
-                        throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+
+                        var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                        OutputController.getinstance().setValue(texto);
+                        
+                        ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+            
                     }
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+        
                 }
                 break
             case OpArithmetic.MULTIPLICATION:
@@ -101,10 +125,18 @@ export class Arithmetic extends Expression {
                     if (valDer.type == 0) {
                         result = { value: (varIz.value * valDer.value), type: TypeAll.NUMBER };
                     } else {
-                        throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                        var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                        OutputController.getinstance().setValue(texto);
+                        
+                        ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+            
                     }
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+        
                 }
                 break;
             case OpArithmetic.DIVISION:
@@ -117,10 +149,18 @@ export class Arithmetic extends Expression {
                     if (valDer.type == 0) {
                         result = { value: (varIz.value / valDer.value), type: TypeAll.NUMBER };
                     } else {
-                        throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                        var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                        OutputController.getinstance().setValue(texto);
+                        
+                        ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+            
                     }
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+        
                 }
                 break;
             case OpArithmetic.EXPONENT:
@@ -133,10 +173,18 @@ export class Arithmetic extends Expression {
                     if (valDer.type == 0) {
                         result = { value: Math.pow(varIz.value, valDer.value), type: TypeAll.NUMBER };
                     } else {
-                        throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                        var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                        OutputController.getinstance().setValue(texto);
+                        
+                        ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+            
                     }
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+        
                 }
                 break;
             case OpArithmetic.MODULE:
@@ -149,10 +197,18 @@ export class Arithmetic extends Expression {
                     if (valDer.type == 0) {
                         result = { value: (varIz.value % valDer.value), type: TypeAll.NUMBER };
                     } else {
-                        throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                        var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                        OutputController.getinstance().setValue(texto);
+                        
+                        ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+            
                     }
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+        
                 }
                 break;
             case OpArithmetic.INCREASE:
@@ -165,11 +221,18 @@ export class Arithmetic extends Expression {
                     if (valDer.type == 0) {
                         result = { value: (varIz.value + 1), type: TypeAll.NUMBER };
                     } else {
-                        throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type), row: this.row, column: this.column };
+                        var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                        OutputController.getinstance().setValue(texto);
+                        
+                        ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+            
                     }
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type), row: this.row, column: this.column };
-
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+        
                 }
                 break;
             case OpArithmetic.DECREME:
@@ -182,11 +245,18 @@ export class Arithmetic extends Expression {
                     if (valDer.type == 0) {
                         result = { value: (varIz.value - 1), type: TypeAll.NUMBER };
                     } else {
-                        throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type), row: this.row, column: this.column };
+                        var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                        OutputController.getinstance().setValue(texto);
+                        
+                        ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+            
                     }
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type), row: this.row, column: this.column };
-
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+        
                 }
                 break;
             case OpArithmetic.NEGATIVE:
@@ -203,11 +273,19 @@ export class Arithmetic extends Expression {
                 } else if (varIz.type == 2) {
                     result = { value: (-varIz.value), type: TypeAll.NUMBER };
                 } else {
-                    throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type), row: this.row, column: this.column };
+                    var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                    OutputController.getinstance().setValue(texto);
+                    
+                    ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+        
                 }
                 break;
             default:
-                throw { error: "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type), row: this.row, column: this.column };
+                var texto = "Operador " + this.getOperator(this.type) + " NO puede ser aplicado a los tipos " + this.getType(varIz.type) + " con " + this.getType(valDer.type);
+                OutputController.getinstance().setValue(texto);
+                
+                ErrorController.getInstance().add(texto, "Semantico", this.row, this.column);
+    
                 break;
         }
 
@@ -259,5 +337,9 @@ export class Arithmetic extends Expression {
         }
 
         return ""
+    }
+
+    public getName(){
+        return this.name;
     }
 }

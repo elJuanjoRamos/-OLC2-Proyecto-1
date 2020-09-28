@@ -5,7 +5,7 @@ import { Ambit } from '../id/ambit.identifier'
 
 
 export class Logical extends Expression {
-
+    public name = "Logical"
     private left:Expression;
     private right: Expression;
     private type: OpLogical;
@@ -13,7 +13,7 @@ export class Logical extends Expression {
     public column:number;
 
     constructor(l: Expression, r: Expression, t: OpLogical, ro: number, c: number) {
-        super(ro, c);
+        super(ro, c, "Logical");
         this.left = l;
         this.right = r;
         this.type = t;
@@ -51,5 +51,8 @@ export class Logical extends Expression {
 
 
         return { value: false, type: TypeAll.BOOLEAN }
+    }
+    public getName(){
+        return this.name;
     }
 }

@@ -12,7 +12,6 @@ export class Tabla {
     private column
 
     constructor(n, t, a, val, r, v, f, ro, col) {
-        console.log(r)
         this.name = n;
         this.type = t;
         this.ambit = a;
